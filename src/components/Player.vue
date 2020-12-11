@@ -53,8 +53,9 @@ export default {
 .my-wrapper{
   width:100%; 
   background-color:darkred; 
-  height: 90vh; 
+  height: 100vh; 
   min-height:200px;
+  
 }
 .video-js {
     /* position: relative !important; */
