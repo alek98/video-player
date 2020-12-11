@@ -2,9 +2,8 @@
   <div class="my-wrapper">
     <videoPlayer 
     class="video-js vjs-default-skin vjs-fluid"
-
     :options="playerOptions"
-    @play="onPlayerPlay($event)"
+    ref="videoPlayer" 
     />
   </div>
 </template>
@@ -12,6 +11,7 @@
 <script>
 import {videoPlayer}  from 'vue-video-player'
 import 'video.js/dist/video-js.css'
+
 export default {
   components: {
     videoPlayer,
@@ -20,7 +20,6 @@ export default {
   data(){
     return{
       playerOptions: {
-
         muted: false,
         language: 'en',
         playbackRates: [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0],
@@ -30,21 +29,59 @@ export default {
           src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
         }],
         poster: "/static/images/author.jpg",
-      }
+      },
+      pause: true,
     }
   },
 
+  created() {
+    window.addEventListener('keydown', (event) => {
+      if (event.defaultPrevented) {
+        return; // Do nothing if the event was already processed
+      }
+      switch (event.key) {
+        case " ":
+          this.playOrPause();
+          break;
+        case "ArrowLeft":
+          this.backward();
+          break;
+        case "ArrowRight":
+          this.forward();
+          break;
+        default:
+          return;
+      }
+      event.preventDefault(); 
+    });
+  },
   computed:{
-    player(){
+    player:{
+      get(){
       return this.$refs.videoPlayer.player;
-    }
+      }
+    },
   },
 
   methods: {
-  // listen event
-    onPlayerPlay(player) {
-      console.log(player);
+    playOrPause(){
+      if(this.pause){
+        this.player.play();
+        this.pause = !this.pause;
+      }
+      else{
+        this.player.pause();
+        this.pause = !this.pause;
+      }
+      
     },
+
+    forward(){
+      console.log("forward");
+    },
+    backward(){
+      console.log("backward");
+    }
   }
 }
 </script>
@@ -52,13 +89,12 @@ export default {
 <style>
 .my-wrapper{
   width:100%; 
-  background-color:darkred; 
   height: 100vh; 
-  min-height:200px;
+  min-height:290px;
   
 }
 .video-js {
-    /* position: relative !important; */
+    position: relative !important;
     width: 100% !important;
     height: 100% !important;
 }
