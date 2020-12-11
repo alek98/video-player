@@ -29,4 +29,8 @@ body{
   margin: 0px !important;
   padding: 0px !important;
 }
+/* remove orange outline */
+*:focus {
+    outline: none;
+}
 </style>
