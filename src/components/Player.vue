@@ -56,10 +56,8 @@ export default {
     });
   },
   computed:{
-    player:{
-      get(){
+    player(){
       return this.$refs.videoPlayer.player;
-      }
     },
   },
 
@@ -77,10 +75,12 @@ export default {
     },
 
     forward(){
-      console.log("forward");
+      let time = this.player.currentTime() + 5;
+      this.player.currentTime(time);
     },
     backward(){
-      console.log("backward");
+      let time = this.player.currentTime() - 5;
+      this.player.currentTime(time);
     }
   }
 }
