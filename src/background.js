@@ -1,6 +1,7 @@
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
@@ -16,10 +17,11 @@ async function createWindow() {
     backgroundColor: '#2e2c29',
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+      nodeIntegration: true
     }
   })
 
+  win.webContents.openDevTools()
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
@@ -33,14 +35,6 @@ async function createWindow() {
   win.setMenu(null);
 }
 
-// Quit when all windows are closed.
-app.on('window-all-closed', () => {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
@@ -66,3 +60,23 @@ if (isDevelopment) {
     })
   }
 }
+
+
+
+
+ipcMain.on("my-custom-channel", (event, item) => {
+  console.log(item);
+});
+
+// var fs = require('fs');
+
+// // read the file and send data to the render process
+// ipcMain.on('get-file-data', function(event) {
+//     var data = null;
+//     if (process.argv.length > 0) {
+//       console.log(process.argv);
+//         var openFilePath = process.argv[1];
+//         data = fs.readFileSync(openFilePath, 'utf-8');
+//     }
+//     event.returnValue = data;
+// });
