@@ -33,7 +33,6 @@ export default {
       pause: true,
     }
   },
-
   created() {
     window.addEventListener('keydown', (event) => {
       if (event.defaultPrevented) {

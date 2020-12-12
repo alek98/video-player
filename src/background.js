@@ -1,5 +1,5 @@
 
-import { app, protocol, BrowserWindow, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, ipcRenderer } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -9,9 +9,10 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
+let win;
 async function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 800,
     height: 600,
     backgroundColor: '#2e2c29',
@@ -43,7 +44,8 @@ app.on('activate', () => {
 })
 
 app.on('ready', async () => {
-  createWindow()
+  createWindow();
+
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -65,9 +67,13 @@ if (isDevelopment) {
 
 
 ipcMain.on("my-custom-channel", (event, item) => {
-  console.log(item);
+  // console.log(item);
+  // console.log("arguments:", process.argv);
+  win.webContents.send("my-custom-channel", process.argv);
+  let path = "C:\\Users\\aleka\\Documents\\Projects\\video-player\\Big_Buck_Bunny_1080_10s_1MB.mp4";
+  console.log("path:",   path);
+  win.webContents.send("video-path-channel", path);
 });
-
 // var fs = require('fs');
 
 // // read the file and send data to the render process

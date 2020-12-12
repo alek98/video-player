@@ -1,20 +1,46 @@
 <template>
   <div id="app">
+    <p style="color:white">{{path}}</p>
+    <p style="color:white">{{args}}</p>
+    <button @click="open">open</button>
     <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-    <Player/>
+    <Player />
   </div>
 </template>
 
 <script>
 
 import Player from './components/Player.vue'
-
+import {ipcRenderer} from 'electron'
 export default {
   name: 'App',
   components: {
     Player
+  },
+
+  data(){
+    return{
+      args: "arguments",
+      path: "path"
+    } 
+  },
+  created(){
+  ipcRenderer.on("my-custom-channel", (event, item) =>{
+    this.args = item;
+  });
+  ipcRenderer.on("video-path-channel", (event,path) =>{
+    this.path = path;
+  })
+  },
+  methods:{
+    open(){
+    ipcRenderer.send('my-custom-channel', "hello again")
+    },
+
   }
 }
+
+
 </script>
 
 <style>

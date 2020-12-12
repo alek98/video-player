@@ -4,8 +4,8 @@ import App from './App.vue'
 
 Vue.config.productionTip = false
 
-ipcRenderer.send('my-custom-channel', "hello from Vue!")
-
+// ipcRenderer.send('my-custom-channel', "hello from Vue!")
+ipcRenderer.send('my-custom-channel', process.argv)
 
 // var data = ipcRenderer.sendSync('get-file-data')
 // if (data ===  null) {
