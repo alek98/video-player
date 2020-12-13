@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <p style="color:white">{{args}}</p>
-    <button @click="open">open</button>
+    <!-- <p style="color:white">{{args}}</p> -->
+    <!-- <button @click="open">open</button> -->
     <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
     <Player />
   </div>

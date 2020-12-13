@@ -24,7 +24,7 @@ async function createWindow() {
     }
   })
 
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
@@ -68,18 +68,26 @@ if (isDevelopment) {
 }
 
 ipcMain.on("my-custom-channel", (event, item) => {
-  console.log(process.argv)
+  // console.log(process.argv)
   win.webContents.send("my-custom-channel", process.argv);
   //if user clicks on "open with" my electron app
-  if(process.argv[1])
+  if(process.argv[1]){
+    //TODO: check for supported types before sending argument
+    //TODO: resolve problem with space in the path
     win.webContents.send("video-path-channel", process.argv[1]);
-  
+  }
 });
 
 //why file protocol: https://github.com/electron/electron/issues/23757#issuecomment-640146333
 function enableFileProtocol(){
   protocol.registerFileProtocol('file', (request, callback) => {
-    const pathname = request.url.replace('file:///', '');
+    //this is inital string
+    let pathname = request.url;
+    //this is necessary for file protocol to work
+    pathname = pathname.replace('file:///', '');
+    //this is necessary for whitespaces in path
+    pathname = pathname.replace(/%20/g, ' ');
+    console.log(pathname)
     callback(pathname);
   });
 }

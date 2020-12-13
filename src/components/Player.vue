@@ -25,7 +25,7 @@ export default {
         language: 'en',
         playbackRates: [0.75, 1.0, 1.25, 1.5, 1.75, 1.9, 2.0],
         sources: [{
-          src: "C:\\Users\\aleka\\Documents\\Projects\\video-player\\BigBuckBunny.mp4",
+          src: "C:\\Users\\aleka\\Documents\\Projects\\video-player\\BigBuckBunny 5.mp4",
         }],
         poster: "/static/images/author.jpg",
       },
@@ -46,7 +46,7 @@ export default {
   methods: {
     addRenderer(){
       ipcRenderer.on("video-path-channel", (event,videoPath) =>{
-        console.log(videoPath);
+        console.log("video path:", videoPath);
         this.playerOptions.sources = [{
           src: videoPath,
           type:"video/mp4",
