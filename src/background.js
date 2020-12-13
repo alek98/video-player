@@ -67,19 +67,16 @@ if (isDevelopment) {
   }
 }
 
-
-var fs = require('fs');
 ipcMain.on("my-custom-channel", (event, item) => {
-  // console.log(item);
-  // console.log("arguments:", process.argv);
+  console.log(process.argv)
   win.webContents.send("my-custom-channel", process.argv);
-  // let path = "C:\\Users\\aleka\\Documents\\Projects\\video-player\\Big_Buck_Bunny_1080_10s_1MB.mp4";
-  // let video = fs.createReadStream(path);
-  // console.log(video);
-  win.webContents.send("video-path-channel", "asdf");
+  //if user clicks on "open with" my electron app
+  if(process.argv[1])
+    win.webContents.send("video-path-channel", process.argv[1]);
   
 });
 
+//why file protocol: https://github.com/electron/electron/issues/23757#issuecomment-640146333
 function enableFileProtocol(){
   protocol.registerFileProtocol('file', (request, callback) => {
     const pathname = request.url.replace('file:///', '');
