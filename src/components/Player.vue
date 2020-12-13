@@ -30,7 +30,6 @@ export default {
         }],
         poster: "/static/images/author.jpg",
       },
-      pause: true,
     }
   },
 
@@ -63,13 +62,12 @@ export default {
 
   methods: {
     playOrPause(){
-      if(this.pause){
+      let paused = this.player.paused();
+      if(paused){
         this.player.play();
-        this.pause = !this.pause;
       }
       else{
         this.player.pause();
-        this.pause = !this.pause;
       }
       
     },
