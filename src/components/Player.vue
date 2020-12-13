@@ -47,10 +47,10 @@ export default {
     addRenderer(){
       ipcRenderer.on("video-path-channel", (event,videoPath) =>{
         console.log("video path:", videoPath);
-        this.playerOptions.sources = [{
-          src: videoPath,
-          type:"video/mp4",
-        }];
+        // this.playerOptions.sources = [{
+        //   src: videoPath,
+        //   type:"video/mp4",
+        // }];
       })
     },
 
@@ -77,13 +77,12 @@ export default {
     },
     
     playOrPause(){
-      if(this.pause){
+      let paused = this.player.paused();
+      if(paused){
         this.player.play();
-        this.pause = !this.pause;
       }
       else{
         this.player.pause();
-        this.pause = !this.pause;
       }
     },
 
