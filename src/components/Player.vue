@@ -11,6 +11,7 @@
 <script>
 import {videoPlayer}  from 'vue-video-player'
 import 'video.js/dist/video-js.css'
+import { ipcRenderer } from 'electron'
 
 export default {
   components: {
@@ -22,37 +23,20 @@ export default {
       playerOptions: {
         muted: false,
         language: 'en',
-        playbackRates: [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0],
-        // fluid:true,
+        playbackRates: [0.75, 1.0, 1.25, 1.5, 1.75, 1.9, 2.0],
         sources: [{
           type: "video/mp4",
-          src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+          src: "C:/Users/aleka/Documents/Projects/video-player/BigBuckBunny.mp4",
         }],
         poster: "/static/images/author.jpg",
       },
       pause: true,
+      path: "",
     }
   },
   created() {
-    window.addEventListener('keydown', (event) => {
-      if (event.defaultPrevented) {
-        return; // Do nothing if the event was already processed
-      }
-      switch (event.key) {
-        case " ":
-          this.playOrPause();
-          break;
-        case "ArrowLeft":
-          this.backward();
-          break;
-        case "ArrowRight":
-          this.forward();
-          break;
-        default:
-          return;
-      }
-      event.preventDefault(); 
-    });
+    this.addRenderer();
+    this.addKeyListeners();
   },
   computed:{
     player(){
@@ -61,6 +45,38 @@ export default {
   },
 
   methods: {
+    addRenderer(){
+      ipcRenderer.on("video-path-channel", (event,videoPath) =>{
+        console.log(videoPath);
+        // this.playerOptions.sources = [{
+        //   type: "video/mp4",
+        //   src: video,
+        // }];
+      })
+    },
+
+    addKeyListeners(){
+      window.addEventListener('keydown', (event) => {
+        if (event.defaultPrevented) {
+          return; // Do nothing if the event was already processed
+        }
+        switch (event.key) {
+          case " ":
+            this.playOrPause();
+            break;
+          case "ArrowLeft":
+            this.backward();
+            break;
+          case "ArrowRight":
+            this.forward();
+            break;
+          default:
+            return;
+        }
+        event.preventDefault(); 
+      });
+    },
+    
     playOrPause(){
       if(this.pause){
         this.player.play();
@@ -70,7 +86,6 @@ export default {
         this.player.pause();
         this.pause = !this.pause;
       }
-      
     },
 
     forward(){

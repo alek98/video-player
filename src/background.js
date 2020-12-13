@@ -1,5 +1,5 @@
 
-import { app, protocol, BrowserWindow, ipcMain, ipcRenderer } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -10,6 +10,8 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 let win;
+
+
 async function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
@@ -17,8 +19,8 @@ async function createWindow() {
     height: 600,
     backgroundColor: '#2e2c29',
     webPreferences: {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      nodeIntegration: true
+      nodeIntegration: true,
+      webSecurity: false,
     }
   })
 
@@ -45,6 +47,8 @@ app.on('activate', () => {
 
 app.on('ready', async () => {
   createWindow();
+  enableFileProtocol();
+
 
 })
 
@@ -64,25 +68,21 @@ if (isDevelopment) {
 }
 
 
-
-
+var fs = require('fs');
 ipcMain.on("my-custom-channel", (event, item) => {
   // console.log(item);
   // console.log("arguments:", process.argv);
   win.webContents.send("my-custom-channel", process.argv);
-  let path = "C:\\Users\\aleka\\Documents\\Projects\\video-player\\Big_Buck_Bunny_1080_10s_1MB.mp4";
-  console.log("path:",   path);
-  win.webContents.send("video-path-channel", path);
+  // let path = "C:\\Users\\aleka\\Documents\\Projects\\video-player\\Big_Buck_Bunny_1080_10s_1MB.mp4";
+  // let video = fs.createReadStream(path);
+  // console.log(video);
+  win.webContents.send("video-path-channel", "asdf");
+  
 });
-// var fs = require('fs');
 
-// // read the file and send data to the render process
-// ipcMain.on('get-file-data', function(event) {
-//     var data = null;
-//     if (process.argv.length > 0) {
-//       console.log(process.argv);
-//         var openFilePath = process.argv[1];
-//         data = fs.readFileSync(openFilePath, 'utf-8');
-//     }
-//     event.returnValue = data;
-// });
+function enableFileProtocol(){
+  protocol.registerFileProtocol('file', (request, callback) => {
+    const pathname = request.url.replace('file:///', '');
+    callback(pathname);
+  });
+}
