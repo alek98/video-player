@@ -29,8 +29,6 @@ export default {
         }],
         poster: "/static/images/author.jpg",
       },
-      pause: true,
-      path: "",
     }
   },
   created() {
