@@ -26,9 +26,8 @@ export default {
         // fluid:true,
         sources: [{
           type: "video/mp4",
-          src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+          src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4#t=5"
         }],
-        poster: "/static/images/author.jpg",
       },
     }
   },
