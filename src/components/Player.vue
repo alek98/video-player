@@ -1,7 +1,7 @@
 <template>
   <div class="my-wrapper">
     <videoPlayer 
-    class="video-js vjs-default-skin vjs-fluid"
+    class="video-js vjs-default-skin vjs-big-play-centered"
     :options="playerOptions"
     ref="videoPlayer" 
     />
@@ -94,5 +94,32 @@ export default {
     position: relative !important;
     width: 100% !important;
     height: 100% !important;
+    color: #e2f3f5;
+}
+ .video-js .vjs-control-bar{
+  background: #0e153ac5;
+}
+.video-js .vjs-slider-bar, 
+.video-js .vjs-volume-level{
+  background:#22d1ee;
+}
+.video-js .vjs-playback-rate{
+  color: #e2f3f5;
+}
+.video-js .vjs-big-play-button{ 
+  color: #e2f3f5;
+  background: #0e153aab;
+  border-radius: 25px;
+  border-color: #e2f3f5;
+  border-width: 1px;
+  font-size: 35px;
+}
+.vjs-default-skin:hover .vjs-big-play-button{ 
+  color: #e2f3f5;
+  background: #3d5bf18f;
+  border-radius: 25px;
+  border-color: #e2f3f5;
+  border-width: 1px;
+  font-size: 35px;
 }
 </style>
