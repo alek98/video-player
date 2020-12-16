@@ -17,6 +17,8 @@ async function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
+    minHeight: 350,
+    minWidth: 500,
     backgroundColor: '#2e2c29',
     webPreferences: {
       nodeIntegration: true,
@@ -73,7 +75,6 @@ ipcMain.on("my-custom-channel", (event, item) => {
   //if user clicks on "open with" my electron app
   if(process.argv[1]){
     //TODO: check for supported types before sending argument
-    //TODO: resolve problem with space in the path
     win.webContents.send("video-path-channel", process.argv[1]);
   }
 });

@@ -1,7 +1,7 @@
 <template>
   <div class="my-wrapper">
     <videoPlayer 
-    class="video-js vjs-default-skin vjs-fluid"
+    class="video-js vjs-default-skin vjs-big-play-centered"
     :options="playerOptions"
     ref="videoPlayer" 
     />
@@ -27,7 +27,6 @@ export default {
         sources: [{
           src: "C:\\Users\\aleka\\Documents\\Projects\\video-player\\BigBuckBunny 5.mp4",
         }],
-        poster: "/static/images/author.jpg",
       },
     }
   },
@@ -108,4 +107,5 @@ export default {
     width: 100% !important;
     height: 100% !important;
 }
+
 </style>
