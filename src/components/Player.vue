@@ -97,7 +97,7 @@ export default {
     color: #e2f3f5;
 }
  .video-js .vjs-control-bar{
-  background: #0e153ac5;
+  background: #0e153a85;
 }
 .video-js .vjs-slider-bar, 
 .video-js .vjs-volume-level{
@@ -108,18 +108,18 @@ export default {
 }
 .video-js .vjs-big-play-button{ 
   color: #e2f3f5;
-  background: #0e153aab;
+  background: #3d5bf18f;
   border-radius: 25px;
   border-color: #e2f3f5;
-  border-width: 1px;
+  border-width: 0px;
   font-size: 35px;
 }
 .vjs-default-skin:hover .vjs-big-play-button{ 
   color: #e2f3f5;
-  background: #3d5bf18f;
+  background: #3d5bf1;
   border-radius: 25px;
   border-color: #e2f3f5;
-  border-width: 1px;
+  border-width: 0px;
   font-size: 35px;
 }
 </style>
