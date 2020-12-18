@@ -13,9 +13,6 @@
   <div id="problem" v-show="videoState=='cantPlay'">
     We can't play this video. Please try again.
   </div>
-  <div id="loading" v-show="videoState=='loading'">
-    Loading...
-  </div>
 </div>
 </template>
 
@@ -128,7 +125,7 @@ export default {
     height: 100% !important;
 }
 
-#problem, #loading{
+#problem{
   font-size: 20px;
   color:#e2f3f5;
   background-color: #0e153a;
