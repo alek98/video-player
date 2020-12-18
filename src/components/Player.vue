@@ -1,11 +1,22 @@
 <template>
-  <div class="my-wrapper">
+<div>
+  <div class="my-wrapper" v-show="videoState=='canPlay'">
     <videoPlayer 
     class="video-js vjs-default-skin vjs-big-play-centered"
     :options="playerOptions"
     ref="videoPlayer" 
+    @canplay="onCanplay()"
+    @error="onError()"
     />
   </div>
+
+  <div id="problem" v-show="videoState=='cantPlay'">
+    We can't play this video. Please try again.
+  </div>
+  <div id="loading" v-show="videoState=='loading'">
+    Loading...
+  </div>
+</div>
 </template>
 
 <script>
@@ -25,9 +36,11 @@ export default {
         language: 'en',
         playbackRates: [0.75, 1.0, 1.25, 1.5, 1.75, 1.9, 2.0],
         sources: [{
-          src: "C:\\Users\\aleka\\Documents\\Projects\\video-player\\BigBuckBunny 5.mp4",
+          // src: "C:\\Users\\aleka\\Documents\\Projects\\video-player\\BigBuckBunny 5.mp4",
+
         }],
       },
+      videoState: "loading", //videoStates: loading, canPlay, cantPlay
     }
   },
   created() {
@@ -43,11 +56,11 @@ export default {
   methods: {
     addRenderer(){
       ipcRenderer.on("video-path-channel", (event,videoPath) =>{
-        console.log("video path:", videoPath);
-        // this.playerOptions.sources = [{
-        //   src: videoPath,
-        //   type:"video/mp4",
-        // }];
+        console.log(" %c video path: ", "color:darkblue", videoPath);
+        this.playerOptions.sources = [{
+          src: videoPath,
+          type:"video/mp4",
+        }];
       })
     },
 
@@ -90,6 +103,13 @@ export default {
     backward(){
       let time = this.player.currentTime() - 5;
       this.player.currentTime(time);
+    },
+
+    onCanplay(){
+      this.videoState = "canPlay";
+    },
+    onError(){
+      this.videoState = "cantPlay";
     }
   }
 }
@@ -108,4 +128,13 @@ export default {
     height: 100% !important;
 }
 
+#problem, #loading{
+  font-size: 20px;
+  color:#e2f3f5;
+  background-color: #0e153a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 </style>
