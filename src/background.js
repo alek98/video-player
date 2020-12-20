@@ -77,11 +77,10 @@ ipcMain.on("my-custom-channel", (event, item) => {
   if(process.argv[1]){
     let filePath = process.argv[1];
     // only for testing:
-    // filePath = "C:\\Users\\aleka\\Documents\\Projects\\video-player\\Big_Buck_Bunny_1080_10s_1MB.mp3";
+    filePath = "C:\\Users\\aleka\\Documents\\Projects\\video-player\\Big_Buck_Bunny_1080_10s_1MB.mp4";
     //check for supported types before sending argument
     // let fileExtension = filePath.split('.').pop();
     // let possibleExtensions = ['mp4', 'webm', 'ogg'];
-
     win.webContents.send("video-path-channel", filePath);
   }
 });
