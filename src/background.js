@@ -52,9 +52,14 @@ app.on('activate', () => {
 app.on('ready', async () => {
   createWindow();
   enableFileProtocol();
-  win.once('ready-to-show', () => {
-    win.show();
+  //firsh happens did-finish-load event and then ready-to-show event
+  win.webContents.once('did-finish-load', () => {
+    console.log('did-finish-load')
     sendFile();
+  })
+  win.once('ready-to-show', () => {
+      console.log('ready-to-show');
+      win.show();
   })
 })
 

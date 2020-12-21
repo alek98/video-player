@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="my-wrapper" v-show="videoState=='canPlay'">
+  <div class="my-wrapper" v-show="canPlayVideo==true">
     <videoPlayer 
     class="video-js vjs-default-skin vjs-big-play-centered"
     :options="playerOptions"
@@ -10,7 +10,7 @@
     />
   </div>
 
-  <div id="problem" v-show="videoState=='cantPlay'">
+  <div id="problem" v-show="canPlayVideo==false">
     We can't play this video. Please try again.
   </div>
 </div>
@@ -36,7 +36,7 @@ export default {
       /*TODO: fix videoState (only true and false should be)
       fix video.js changing source error code 4.
       */
-      videoState: "loading", //videoStates: loading, canPlay, cantPlay
+      canPlayVideo: null, //by default there is no video path 
     }
   },
   created() {
@@ -103,11 +103,11 @@ export default {
 
     onCanplay(){
       console.log('can play');
-      this.videoState = "canPlay";
+      this.canPlayVideo = true;
     },
     onError(){
       console.log('cant play')
-      this.videoState = "cantPlay";
+      this.canPlayVideo = false;
     }
   }
 }
