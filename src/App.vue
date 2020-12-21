@@ -21,15 +21,13 @@ export default {
   data(){
     return{
       args: "arguments",
-      videoPathExists: false,// or null
+      videoPathExists: false,
     } 
   },
   created(){
    ipcRenderer.on("video-path-channel", (event,videoPath) =>{
-     console.log(" %c video path: ", "color:red", videoPath);
-     if(videoPath){
+     if(videoPath)
        this.videoPathExists = true;
-     }
    });
   },
   methods:{

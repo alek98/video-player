@@ -32,10 +32,9 @@ export default {
         muted: false,
         language: 'en',
         playbackRates: [0.75, 1.0, 1.25, 1.5, 1.75, 1.9, 2.0],
-        sources: [{
-          // src: "C:\\Users\\aleka\\Documents\\Projects\\video-player\\BigBuckBunny 5.mp4",
-
-        }],
+        // sources: [{
+        //   src: "C:\\Users\\aleka\\Documents\\Projects\\video-player\\BigBuckBunny 5.mp4",
+        // }],
       },
       videoState: "loading", //videoStates: loading, canPlay, cantPlay
     }

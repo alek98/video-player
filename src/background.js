@@ -28,11 +28,11 @@ async function createWindow() {
     }
   })
 
-  // win.webContents.openDevTools()
+  win.webContents.openDevTools()
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    // if (!process.env.IS_TEST) win.webContents.openDevTools()
+    if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
@@ -52,9 +52,9 @@ app.on('activate', () => {
 app.on('ready', async () => {
   createWindow();
   enableFileProtocol();
-
   win.once('ready-to-show', () => {
     win.show();
+    sendFile();
   })
 })
 
@@ -73,21 +73,20 @@ if (isDevelopment) {
   }
 }
 
-// ipcMain.on("my-custom-channel", (event, item) => {
-//   // console.log(process.argv)
-//   win.webContents.send("my-custom-channel", process.argv);
-//   //if user clicks on "open with" my electron app
-//   //argv[1] is the file path
-//   if(process.argv[1]){
-//     let filePath = process.argv[1];
-//     // only for testing:
-//     filePath = "C:\\Users\\aleka\\Documents\\Projects\\video-player\\Big_Buck_Bunny_1080_10s_1MB.mp4";
-//     //check for supported types before sending argument
-//     // let fileExtension = filePath.split('.').pop();
-//     // let possibleExtensions = ['mp4', 'webm', 'ogg'];
-//     win.webContents.send("video-path-channel", filePath);
-//   }
-// });
+function sendFile(){
+  if(isDevelopment && process.argv[2]){
+    let videoPath = process.argv[2];
+    win.webContents.send("video-path-channel", videoPath);
+  }
+  else if(!isDevelopment && process.argv[1]){
+    let videoPath = process.argv[1];
+    win.webContents.send("video-path-channel", videoPath);
+  }
+  else{
+    //application is started without "open with" video
+  }
+}
+
 
 //why file protocol: https://github.com/electron/electron/issues/23757#issuecomment-640146333
 function enableFileProtocol(){
