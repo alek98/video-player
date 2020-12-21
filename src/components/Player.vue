@@ -32,10 +32,10 @@ export default {
         muted: false,
         language: 'en',
         playbackRates: [0.75, 1.0, 1.25, 1.5, 1.75, 1.9, 2.0],
-        // sources: [{
-        //   src: "C:\\Users\\aleka\\Documents\\Projects\\video-player\\BigBuckBunny 5.mp4",
-        // }],
       },
+      /*TODO: fix videoState (only true and false should be)
+      fix video.js changing source error code 4.
+      */
       videoState: "loading", //videoStates: loading, canPlay, cantPlay
     }
   },
@@ -52,11 +52,11 @@ export default {
   methods: {
     addRenderer(){
       ipcRenderer.on("video-path-channel", (event,videoPath) =>{
-        console.log(" %c video path: ", "color:darkblue", videoPath);
-        this.playerOptions.sources = [{
+        console.log(" %c video path: ", "color:darkblue; background-color:yellow", videoPath);
+        this.player.src({
           src: videoPath,
           type:"video/mp4",
-        }];
+        });
       })
     },
 
@@ -102,9 +102,11 @@ export default {
     },
 
     onCanplay(){
+      console.log('can play');
       this.videoState = "canPlay";
     },
     onError(){
+      console.log('cant play')
       this.videoState = "cantPlay";
     }
   }
