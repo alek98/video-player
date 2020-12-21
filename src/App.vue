@@ -50,8 +50,8 @@ body{
 }
 #app{
   height: 100vh;
-  /* background-image: linear-gradient(to bottom right, rgb(18, 194, 233), rgb(196, 113, 237), rgb(246, 79, 89)); */
-  background-image: url("./assets/background.jpg");
+  background-image: linear-gradient(to bottom right, rgb(18, 194, 233), rgb(196, 113, 237), rgb(246, 79, 89));
+  /* background-image: url("./assets/background.jpg"); */
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;

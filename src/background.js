@@ -12,6 +12,7 @@ protocol.registerSchemesAsPrivileged([
 let win;
 
 
+
 async function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
@@ -20,6 +21,7 @@ async function createWindow() {
     minHeight: 350,
     minWidth: 500,
     backgroundColor: '#2e2c29',
+    show: false,
     webPreferences: {
       nodeIntegration: true,
       webSecurity: false,
@@ -30,7 +32,7 @@ async function createWindow() {
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    if (!process.env.IS_TEST) win.webContents.openDevTools()
+    // if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
@@ -51,7 +53,9 @@ app.on('ready', async () => {
   createWindow();
   enableFileProtocol();
 
-
+  win.once('ready-to-show', () => {
+    win.show();
+  })
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -69,21 +73,21 @@ if (isDevelopment) {
   }
 }
 
-ipcMain.on("my-custom-channel", (event, item) => {
-  // console.log(process.argv)
-  win.webContents.send("my-custom-channel", process.argv);
-  //if user clicks on "open with" my electron app
-  //argv[1] is the file path
-  if(process.argv[1]){
-    let filePath = process.argv[1];
-    // only for testing:
-    filePath = "C:\\Users\\aleka\\Documents\\Projects\\video-player\\Big_Buck_Bunny_1080_10s_1MB.mp4";
-    //check for supported types before sending argument
-    // let fileExtension = filePath.split('.').pop();
-    // let possibleExtensions = ['mp4', 'webm', 'ogg'];
-    win.webContents.send("video-path-channel", filePath);
-  }
-});
+// ipcMain.on("my-custom-channel", (event, item) => {
+//   // console.log(process.argv)
+//   win.webContents.send("my-custom-channel", process.argv);
+//   //if user clicks on "open with" my electron app
+//   //argv[1] is the file path
+//   if(process.argv[1]){
+//     let filePath = process.argv[1];
+//     // only for testing:
+//     filePath = "C:\\Users\\aleka\\Documents\\Projects\\video-player\\Big_Buck_Bunny_1080_10s_1MB.mp4";
+//     //check for supported types before sending argument
+//     // let fileExtension = filePath.split('.').pop();
+//     // let possibleExtensions = ['mp4', 'webm', 'ogg'];
+//     win.webContents.send("video-path-channel", filePath);
+//   }
+// });
 
 //why file protocol: https://github.com/electron/electron/issues/23757#issuecomment-640146333
 function enableFileProtocol(){
