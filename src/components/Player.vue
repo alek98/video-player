@@ -93,11 +93,13 @@ export default {
     },
 
     forward(){
-      let time = this.player.currentTime() + 5;
+      // seek forward 5 * playbackRate seconds
+      let time = this.player.currentTime() + 5 * this.player.playbackRate();
       this.player.currentTime(time);
     },
     backward(){
-      let time = this.player.currentTime() - 5;
+      // seek backward 5 * playbackRate seconds
+      let time = this.player.currentTime() -  5 * this.player.playbackRate();
       this.player.currentTime(time);
     },
 
