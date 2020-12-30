@@ -33,8 +33,7 @@ export default {
         language: 'en',
         playbackRates: [0.75, 1.0, 1.25, 1.5, 1.75, 1.9, 2.0],
       },
-      /*TODO: fix videoState (only true and false should be)
-      fix video.js changing source error code 4.
+      /*TODO:   fix video.js changing source error code 4.
       */
       canPlayVideo: null, //by default there is no video path 
     }
