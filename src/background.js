@@ -106,3 +106,8 @@ function enableFileProtocol(){
     callback(pathname);
   });
 }
+
+ipcMain.on('video-path-channel', (event, videoPath) => {
+  console.log(videoPath);
+  win.webContents.send("video-path-channel", videoPath);
+})

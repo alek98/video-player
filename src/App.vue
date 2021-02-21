@@ -42,9 +42,9 @@ export default {
         title: 'Choose Video File',   // title for Windows
         message: 'Choose Video File', // title for Mac
       });
-      
-      let filePath = result?.[0]
-      console.log(filePath)
+
+      let videoPath = result?.[0]
+      ipcRenderer.send('video-path-channel', videoPath)
     }
   }
 }
