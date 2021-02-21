@@ -154,6 +154,10 @@ export default {
   font-size: 35px;
 }
 
+.vjs-loading-spinner {
+  display: none !important
+}
+
 #problem{
   font-size: 20px;
   color:#e2f3f5;
