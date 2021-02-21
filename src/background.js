@@ -50,8 +50,11 @@ app.on('activate', () => {
 })
 
 app.on('ready', async () => {
+  //creates inital window
   createWindow();
+
   enableFileProtocol();
+
   //firsh happens did-finish-load event and then ready-to-show event
   win.webContents.once('did-finish-load', () => {
     console.log('did-finish-load')
@@ -97,12 +100,20 @@ function sendFile(){
 function enableFileProtocol(){
   protocol.registerFileProtocol('file', (request, callback) => {
     //this is inital string
-    let pathname = request.url;
+    console.log('=====================', request.url);
     //this is necessary for file protocol to work
-    pathname = pathname.replace('file:///', '');
+    // pathname = pathname.replace('file:///', '');
     //this is necessary for whitespaces in path
-    pathname = pathname.replace(/%20/g, ' ');
+    // pathname = pathname.replace(/%20/g, ' ');
+
+    //shorthand
+    const pathname = decodeURI(request.url.replace('file:///', ''));
     console.log(pathname)
     callback(pathname);
   });
 }
+
+ipcMain.on('video-path-channel', (event, videoPath) => {
+  console.log(videoPath);
+  win.webContents.send("video-path-channel", videoPath);
+})
