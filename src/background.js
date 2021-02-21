@@ -100,7 +100,6 @@ function sendFile(){
 function enableFileProtocol(){
   protocol.registerFileProtocol('file', (request, callback) => {
     //this is inital string
-    console.log('=====================', request.url);
     //this is necessary for file protocol to work
     // pathname = pathname.replace('file:///', '');
     //this is necessary for whitespaces in path
@@ -108,12 +107,12 @@ function enableFileProtocol(){
 
     //shorthand
     const pathname = decodeURI(request.url.replace('file:///', ''));
-    console.log(pathname)
+    // console.log(pathname)
     callback(pathname);
   });
 }
 
 ipcMain.on('video-path-channel', (event, videoPath) => {
-  console.log(videoPath);
+  // console.log(videoPath);
   win.webContents.send("video-path-channel", videoPath);
 })
