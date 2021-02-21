@@ -100,11 +100,14 @@ function sendFile(){
 function enableFileProtocol(){
   protocol.registerFileProtocol('file', (request, callback) => {
     //this is inital string
-    let pathname = request.url;
+    console.log('=====================', request.url);
     //this is necessary for file protocol to work
-    pathname = pathname.replace('file:///', '');
+    // pathname = pathname.replace('file:///', '');
     //this is necessary for whitespaces in path
-    pathname = pathname.replace(/%20/g, ' ');
+    // pathname = pathname.replace(/%20/g, ' ');
+
+    //shorthand
+    const pathname = decodeURI(request.url.replace('file:///', ''));
     console.log(pathname)
     callback(pathname);
   });
