@@ -2,7 +2,7 @@
   <div >
     <div  id="app" v-show="videoPathExists==false">
     <h1>Video Player</h1>
-    <button id="chooseButton"> Choose Video </button>
+    <button id="chooseButton" @click="chooseVideo()"> Choose Video </button>
     </div>
     <Player v-show="videoPathExists==true"/>
   </div>
@@ -11,7 +11,9 @@
 <script>
 
 import Player from './components/Player.vue'
-import {ipcRenderer} from 'electron'
+import {ipcRenderer, remote} from 'electron'
+const {dialog} = remote
+
 export default {
   name: 'App',
   components: {
@@ -31,10 +33,19 @@ export default {
    });
   },
   methods:{
-    open(){
-    ipcRenderer.send('my-custom-channel', "hello again")
-    },
-
+    chooseVideo(){
+      const result = dialog.showOpenDialogSync({
+        properties: ['openFile'], 
+        filters: [
+          { name: 'Movies', extensions: ['mkv', 'avi', 'mp4', 'ogg', 'webm'] },
+        ],
+        title: 'Choose Video File',   // title for Windows
+        message: 'Choose Video File', // title for Mac
+      });
+      
+      let filePath = result?.[0]
+      console.log(filePath)
+    }
   }
 }
 
