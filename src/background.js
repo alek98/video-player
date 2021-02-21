@@ -50,8 +50,11 @@ app.on('activate', () => {
 })
 
 app.on('ready', async () => {
+  //creates inital window
   createWindow();
+
   enableFileProtocol();
+
   //firsh happens did-finish-load event and then ready-to-show event
   win.webContents.once('did-finish-load', () => {
     console.log('did-finish-load')

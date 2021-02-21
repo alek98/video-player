@@ -43,7 +43,11 @@ export default {
         message: 'Choose Video File', // title for Mac
       });
 
-      let videoPath = result?.[0]
+      let videoPath = result?.[0];
+
+      // appending 'file://' to videoPath is necessary because macos doesn't have 'file://'
+      // and we need that for file protocol to work
+      if(!videoPath.includes('file://')){ videoPath = 'file://' + videoPath;}
       ipcRenderer.send('video-path-channel', videoPath)
     }
   }
