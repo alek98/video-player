@@ -89,10 +89,10 @@ export default {
             this.playOrPause();
             break;
           case "ArrowLeft":
-            this.zoomIn();
+            this.backward();
             break;
           case "ArrowRight":
-            this.zoomOut();
+            this.forward();
             break;
           default:
             return;
