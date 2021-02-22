@@ -119,7 +119,14 @@ export default {
   width:100%; 
   height: 100vh; 
   min-height:290px;
-  
+  overflow:hidden;
+}
+video{
+  width: 200% !important;
+  position: absolute !important;
+  left:50% !important;
+  top:50% !important; 
+  transform: translate(-50%, -50%) !important;
 }
 .video-js {
     position: relative !important;
