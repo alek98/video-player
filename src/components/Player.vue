@@ -168,6 +168,10 @@ export default {
   font-size: 35px;
 }
 
+.vjs-loading-spinner {
+  display: none !important
+}
+
 /* zoom In and zoom Out classes and animations */
 .videoZoomIn {
   width: 200%;
