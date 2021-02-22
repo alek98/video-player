@@ -1,66 +1,70 @@
 <template>
-<div>
-  <div class="my-wrapper" v-show="canPlayVideo==true">
-    <videoPlayer 
-    class="video-js vjs-default-skin vjs-big-play-centered"
-    :options="playerOptions"
-    ref="videoPlayer" 
-    @canplay="onCanplay()"
-    @error="onError()"
-    />
-  </div>
+  <div>
+    <div class="my-wrapper" v-show="canPlayVideo == true">
+      <videoPlayer
+        class="video-js vjs-default-skin vjs-big-play-centered"
+        :options="playerOptions"
+        ref="videoPlayer"
+        @canplay="onCanplay()"
+        @error="onError()"
+      />
+    </div>
 
-  <div id="problem" v-show="canPlayVideo==false">
-    We can't play this video. Please try again.
+    <div id="problem" v-show="canPlayVideo == false">
+      We can't play this video. Please try again.
+    </div>
   </div>
-</div>
 </template>
 
 <script>
-import {videoPlayer}  from 'vue-video-player'
-import 'video.js/dist/video-js.css'
-import { ipcRenderer } from 'electron'
+import { videoPlayer } from "vue-video-player";
+import "video.js/dist/video-js.css";
+import { ipcRenderer } from "electron";
 
 export default {
   components: {
     videoPlayer,
   },
 
-  data(){
-    return{
+  data() {
+    return {
       playerOptions: {
         muted: false,
-        language: 'en',
+        language: "en",
         playbackRates: [0.75, 1.0, 1.25, 1.5, 1.75, 1.9, 2.0],
       },
       /*TODO:   fix video.js changing source error code 4.
-      */
-      canPlayVideo: null, //by default there is no video path 
-    }
+       */
+      canPlayVideo: null, //by default there is no video path
+    };
   },
   created() {
     this.addRenderer();
     this.addKeyListeners();
   },
-  computed:{
-    player(){
+  computed: {
+    player() {
       return this.$refs.videoPlayer.player;
     },
   },
 
   methods: {
-    addRenderer(){
-      ipcRenderer.on("video-path-channel", (event,videoPath) =>{
-        console.log(" %c video path: ", "color:darkblue; background-color:yellow", videoPath);
+    addRenderer() {
+      ipcRenderer.on("video-path-channel", (event, videoPath) => {
+        console.log(
+          " %c video path: ",
+          "color:darkblue; background-color:yellow",
+          videoPath
+        );
         this.player.src({
           src: videoPath,
-          type:"video/mp4",
+          type: "video/mp4",
         });
-      })
+      });
     },
 
-    addKeyListeners(){
-      window.addEventListener('keydown', (event) => {
+    addKeyListeners() {
+      window.addEventListener("keydown", (event) => {
         if (event.defaultPrevented) {
           return; // Do nothing if the event was already processed
         }
@@ -77,77 +81,77 @@ export default {
           default:
             return;
         }
-        event.preventDefault(); 
+        event.preventDefault();
       });
     },
-    
-    playOrPause(){
+
+    playOrPause() {
       let paused = this.player.paused();
-      if(paused){
+      if (paused) {
         this.player.play();
-      }
-      else{
+      } else {
         this.player.pause();
       }
     },
 
-    forward(){
+    forward() {
       // seek forward 5 * playbackRate seconds
       let time = this.player.currentTime() + 5 * this.player.playbackRate();
       this.player.currentTime(time);
     },
-    backward(){
+    backward() {
       // seek backward 5 * playbackRate seconds
-      let time = this.player.currentTime() -  5 * this.player.playbackRate();
+      let time = this.player.currentTime() - 5 * this.player.playbackRate();
       this.player.currentTime(time);
     },
-    zoomIn(){
+    zoomIn() {
       let videoElem = document.getElementsByTagName("video")[0];
-      videoElem.className = 'videoZoomIn';
-      videoElem.style.animation = 'dropMarker 0.7s ease-in';
+      videoElem.className = "videoZoomIn";
+      videoElem.style.animation = "zoomIn 0.2s linear";
     },
-    zoomOut(){
+    zoomOut() {
       let videoElem = document.getElementsByTagName("video")[0];
-      videoElem.className = 'videoZoomOut';
+      videoElem.className = "videoZoomOut";
+      videoElem.style.animation = "zoomOut 0.2s linear";
     },
 
-    onCanplay(){
-      console.log('can play');
+    onCanplay() {
+      console.log("can play");
       this.canPlayVideo = true;
     },
-    onError(){
-      console.log('cant play')
+    onError() {
+      console.log("cant play");
       this.canPlayVideo = false;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>
-.my-wrapper{
-  width:100%; 
-  height: 100vh; 
-  min-height:290px;
-  overflow:hidden;
+.my-wrapper {
+  width: 100%;
+  height: 100vh;
+  min-height: 290px;
+  overflow: hidden;
 }
 
 .video-js {
-    position: relative !important;
-    width: 100% !important;
-    height: 100% !important;
-    color: #e2f3f5;
-}
- .video-js .vjs-control-bar{
-  background: #0e153a85;
-}
-.video-js .vjs-slider-bar, 
-.video-js .vjs-volume-level{
-  background:#22d1ee;
-}
-.video-js .vjs-playback-rate{
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
   color: #e2f3f5;
 }
-.video-js .vjs-big-play-button{ 
+.video-js .vjs-control-bar {
+  background: #0e153a85;
+}
+.video-js .vjs-slider-bar,
+.video-js .vjs-volume-level {
+  background: #22d1ee;
+}
+.video-js .vjs-playback-rate {
+  color: #e2f3f5;
+}
+.video-js .vjs-big-play-button {
   color: #e2f3f5;
   background: #3d5bf18f;
   border-radius: 25px;
@@ -155,7 +159,7 @@ export default {
   border-width: 0px;
   font-size: 35px;
 }
-.vjs-default-skin:hover .vjs-big-play-button{ 
+.vjs-default-skin:hover .vjs-big-play-button {
   color: #e2f3f5;
   background: #3d5bf1;
   border-radius: 25px;
@@ -164,25 +168,57 @@ export default {
   font-size: 35px;
 }
 
-.videoZoomIn{
-  width: 200% !important;
-  position: absolute !important;
-  left:50% !important;
-  top:50% !important; 
-  transform: translate(-50%, -50%) !important;
+/* zoom In and zoom Out classes and animations */
+.videoZoomIn {
+  width: 200%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
-.videoZoomOut{
-  width: 100% !important;
-  position: absolute !important;
-  left:50% !important;
-  top:50% !important; 
-  transform: translate(-50%, -50%) !important;
+.videoZoomOut {
+  width: 100%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+@keyframes zoomOut {
+  from {
+    width: 200%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    width: 100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+@keyframes zoomIn {
+  from {
+    width: 100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    width: 200%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
-
-#problem{
+#problem {
   font-size: 20px;
-  color:#e2f3f5;
+  color: #e2f3f5;
   background-color: #0e153a;
   display: flex;
   justify-content: center;
