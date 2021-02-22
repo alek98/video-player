@@ -36,6 +36,10 @@ export default {
       /*TODO:   fix video.js changing source error code 4.
        */
       canPlayVideo: null, //by default there is no video path
+
+      videoZoom: false,
+      videoZoomLeft: 50,
+      videoZoomTop: 50,
     };
   },
   created() {
@@ -69,20 +73,7 @@ export default {
           return; // Do nothing if the event was already processed
         }
 
-        // capture 'command' and '=' on mac
-        // capture 'ctrl' and '=' on windows
-        let isMacZoomIn = event.metaKey && event.key === "=";
-        let isWindowsZoomIn = event.ctrlKey && event.key === "=";
-        if (isMacZoomIn || isWindowsZoomIn) {
-          this.zoomIn();
-        }
-        // capture 'command' and '-' on mac
-        // capture 'ctrl' and '-' on windows
-        let isMacZoomOut = event.metaKey && event.key === "-";
-        let isWindowsZoomOut = event.ctrlKey && event.key === "-";
-        if (isMacZoomOut || isWindowsZoomOut) {
-          this.zoomOut();
-        }
+        this.addZoomListeners(event);
 
         switch (event.key) {
           case " ":
@@ -99,6 +90,61 @@ export default {
         }
         event.preventDefault();
       });
+    },
+
+    addZoomListeners(event) {
+      // capture 'command' and '=' on mac
+      // capture 'ctrl' and '=' on windows
+      let isMacZoomIn = event.metaKey && event.key === "=";
+      let isWindowsZoomIn = event.ctrlKey && event.key === "=";
+      if (isMacZoomIn || isWindowsZoomIn) {
+        this.zoomIn();
+      }
+      // capture 'command' and '-' on mac
+      // capture 'ctrl' and '-' on windows
+      let isMacZoomOut = event.metaKey && event.key === "-";
+      let isWindowsZoomOut = event.ctrlKey && event.key === "-";
+      if (isMacZoomOut || isWindowsZoomOut) {
+        this.zoomOut();
+      }
+
+      //move only zoomed video
+      let videoElem = document.getElementsByTagName("video")[0];
+      if(!this.videoZoom){
+        return;
+      }
+      switch(event.key){
+        case 'w':
+          if (this.videoZoomTop === 100) {
+            return;
+          }
+          this.videoZoomTop += 10;
+          videoElem.style.top = `${this.videoZoomTop}%`;
+          break;
+        case 's':
+          if (this.videoZoomTop === 0) {
+            return;
+          }
+          this.videoZoomTop -= 10;
+          videoElem.style.top = `${this.videoZoomTop}%`;
+          break;
+        case 'a':
+          if (this.videoZoomLeft === 100) {
+            return;
+          }
+          this.videoZoomLeft += 10;
+          videoElem.style.left = `${this.videoZoomLeft}%`;
+          break;
+        case 'd':
+          if (this.videoZoomLeft === 0) {
+            return;
+          }
+          this.videoZoomLeft -= 10;
+          videoElem.style.left = `${this.videoZoomLeft}%`;    
+          break;   
+        default:
+          return;
+      }
     },
 
     playOrPause() {
@@ -122,21 +168,29 @@ export default {
     },
     zoomIn() {
       let videoElem = document.getElementsByTagName("video")[0];
+
+      videoElem.style.animation = "zoomIn 0.2s ease-out";
       videoElem.className = "videoZoomIn";
-      videoElem.style.animation = "zoomIn 0.2s linear";
+      this.videoZoom = true;
     },
     zoomOut() {
       let videoElem = document.getElementsByTagName("video")[0];
+      
+      videoElem.style.animation = "zoomOut 0.2s ease-out";
       videoElem.className = "videoZoomOut";
-      videoElem.style.animation = "zoomOut 0.2s linear";
+      this.videoZoomLeft = 50;
+      this.videoZoomTop = 50;
+      videoElem.style.left = `${this.videoZoomLeft}%`;
+      videoElem.style.top = `${this.videoZoomTop}%`;
+      this.videoZoom = false;
     },
 
     onCanplay() {
-      console.log("can play");
+      // console.log("can play");
       this.canPlayVideo = true;
     },
     onError() {
-      console.log("cant play");
+      // console.log("cant play");
       this.canPlayVideo = false;
     },
   },
