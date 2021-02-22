@@ -68,6 +68,22 @@ export default {
         if (event.defaultPrevented) {
           return; // Do nothing if the event was already processed
         }
+
+        // capture 'command' and '=' on mac
+        // capture 'ctrl' and '=' on windows
+        let isMacZoomIn = event.metaKey && event.key === "=";
+        let isWindowsZoomIn = event.ctrlKey && event.key === "=";
+        if (isMacZoomIn || isWindowsZoomIn) {
+          this.zoomIn();
+        }
+        // capture 'command' and '-' on mac
+        // capture 'ctrl' and '-' on windows
+        let isMacZoomOut = event.metaKey && event.key === "-";
+        let isWindowsZoomOut = event.ctrlKey && event.key === "-";
+        if (isMacZoomOut || isWindowsZoomOut) {
+          this.zoomOut();
+        }
+
         switch (event.key) {
           case " ":
             this.playOrPause();
@@ -169,7 +185,7 @@ export default {
 }
 
 .vjs-loading-spinner {
-  display: none !important
+  display: none !important;
 }
 
 /* zoom In and zoom Out classes and animations */
