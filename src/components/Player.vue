@@ -69,10 +69,10 @@ export default {
             this.playOrPause();
             break;
           case "ArrowLeft":
-            this.backward();
+            this.zoomIn();
             break;
           case "ArrowRight":
-            this.forward();
+            this.zoomOut();
             break;
           default:
             return;
@@ -101,6 +101,15 @@ export default {
       let time = this.player.currentTime() -  5 * this.player.playbackRate();
       this.player.currentTime(time);
     },
+    zoomIn(){
+      let videoElem = document.getElementsByTagName("video")[0];
+      videoElem.className = 'videoZoomIn';
+      videoElem.style.animation = 'dropMarker 0.7s ease-in';
+    },
+    zoomOut(){
+      let videoElem = document.getElementsByTagName("video")[0];
+      videoElem.className = 'videoZoomOut';
+    },
 
     onCanplay(){
       console.log('can play');
@@ -121,13 +130,7 @@ export default {
   min-height:290px;
   overflow:hidden;
 }
-video{
-  width: 200% !important;
-  position: absolute !important;
-  left:50% !important;
-  top:50% !important; 
-  transform: translate(-50%, -50%) !important;
-}
+
 .video-js {
     position: relative !important;
     width: 100% !important;
@@ -160,6 +163,22 @@ video{
   border-width: 0px;
   font-size: 35px;
 }
+
+.videoZoomIn{
+  width: 200% !important;
+  position: absolute !important;
+  left:50% !important;
+  top:50% !important; 
+  transform: translate(-50%, -50%) !important;
+}
+.videoZoomOut{
+  width: 100% !important;
+  position: absolute !important;
+  left:50% !important;
+  top:50% !important; 
+  transform: translate(-50%, -50%) !important;
+}
+
 
 #problem{
   font-size: 20px;
