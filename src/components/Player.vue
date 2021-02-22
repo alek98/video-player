@@ -37,7 +37,7 @@ export default {
        */
       canPlayVideo: null, //by default there is no video path
 
-      videoZoom: false,
+      videoZoom: 100,
       videoZoomLeft: 50,
       videoZoomTop: 50,
     };
@@ -110,7 +110,7 @@ export default {
 
       //move only zoomed video
       let videoElem = document.getElementsByTagName("video")[0];
-      if(!this.videoZoom){
+      if(this.videoZoom === 100){
         return;
       }
       switch(event.key){
@@ -167,23 +167,38 @@ export default {
       this.player.currentTime(time);
     },
     zoomIn() {
-      let videoElem = document.getElementsByTagName("video")[0];
-
-      videoElem.style.animation = "zoomIn 0.2s ease-out";
-      videoElem.className = "videoZoomIn";
-      this.videoZoom = true;
-    },
-    zoomOut() {
-      let videoElem = document.getElementsByTagName("video")[0];
-      
-      videoElem.style.animation = "zoomOut 0.2s ease-out";
-      videoElem.className = "videoZoomOut";
+      if(this.videoZoom === 200) return;
+      this.videoZoom += 25;
       this.videoZoomLeft = 50;
       this.videoZoomTop = 50;
+      let videoElem = document.getElementsByTagName("video")[0];
+
+      videoElem.style.animation = `zoomInTo${this.videoZoom} 0.2s ease-out`;
+      videoElem.style.width = `${this.videoZoom}%`;
+      videoElem.style.height = `${this.videoZoom}%`;
+      videoElem.style.position = 'absolute';
+      videoElem.style.transform = 'translate(-50%, -50%)';
       videoElem.style.left = `${this.videoZoomLeft}%`;
       videoElem.style.top = `${this.videoZoomTop}%`;
-      this.videoZoom = false;
+
     },
+    zoomOut() {
+      if(this.videoZoom === 100)return;
+      this.videoZoom -= 25;
+      this.videoZoomLeft = 50;
+      this.videoZoomTop = 50;
+
+      let videoElem = document.getElementsByTagName("video")[0];
+
+      videoElem.style.animation = `zoomOutTo${this.videoZoom} 0.2s ease-out`;
+      videoElem.style.width = `${this.videoZoom}%`;
+      videoElem.style.height = `${this.videoZoom}%`;
+      videoElem.style.position = 'absolute';
+      videoElem.style.transform = 'translate(-50%, -50%)';
+      videoElem.style.left = `${this.videoZoomLeft}%`;
+      videoElem.style.top = `${this.videoZoomTop}%`;
+    },
+
 
     onCanplay() {
       // console.log("can play");
@@ -242,24 +257,11 @@ export default {
   display: none !important;
 }
 
-/* zoom In and zoom Out classes and animations */
-.videoZoomIn {
-  width: 200%;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-.videoZoomOut {
-  width: 100%;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-@keyframes zoomOut {
+/* step 1 */
+@keyframes zoomOutTo100 {
   from {
-    width: 200%;
+    width: 125%;
+    height: 125%;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -267,15 +269,128 @@ export default {
   }
   to {
     width: 100%;
+    height: 100%;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
   }
 }
-@keyframes zoomIn {
+@keyframes zoomInTo125 {
   from {
     width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    width: 125%;
+    height: 125%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+/* step 2 */
+@keyframes zoomOutTo125 {
+  from {
+    width: 150%;
+    height: 150%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    width: 125%;
+    height: 125%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+@keyframes zoomInTo150 {
+  from {
+    width: 125%;
+    height: 125%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    width: 150%;
+    height: 150%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+/* step 3 */
+@keyframes zoomOutTo150 {
+  from {
+    width: 175%;
+    height: 175%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    width: 150%;
+    height: 150%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+@keyframes zoomInTo175 {
+  from {
+    width: 150%;
+    height: 150%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    width: 175%;
+    height: 175%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+/* step 4 */
+@keyframes zoomOutTo175 {
+  from {
+    width: 200%;
+    height: 200%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    width: 175%;
+    height: 175%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+@keyframes zoomInTo200 {
+  from {
+    width: 175%;
+    height: 175%;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -283,6 +398,7 @@ export default {
   }
   to {
     width: 200%;
+    height: 200%;
     position: absolute;
     left: 50%;
     top: 50%;
