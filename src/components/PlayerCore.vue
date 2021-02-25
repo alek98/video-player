@@ -14,19 +14,31 @@
         />
       </video>
 
+      <!-- video controls -->
       <template>
         <v-bottom-sheet
           attach=".video-wrapper"
           v-model="controlsShown"
           hide-overlay
           persistent
-          :no-click-animation=true
+          :no-click-animation="true"
         >
-          <div class="controls">
-            <v-btn depressed color="primary" @click="togglePlay()">
-              Play
-            </v-btn>
-          </div>
+          <v-card tile>
+            <div class="controls">
+              <!-- progress bar -->
+              <v-progress-linear
+                :value="50"
+                class="my-0"
+                height="5"
+              ></v-progress-linear>
+
+              <!-- play || payse button -->
+              <v-btn icon color="#e2f3f5" @click="togglePlay()">
+                <v-icon medium v-show="videoPaused"> mdi-play </v-icon>
+                <v-icon medium v-show="!videoPaused"> mdi-pause </v-icon>
+              </v-btn>
+            </div>
+          </v-card>
         </v-bottom-sheet>
       </template>
     </v-container>
@@ -38,6 +50,7 @@ export default {
   data() {
     return {
       controlsShown: true,
+      videoPaused: true,
     };
   },
   computed: {
@@ -49,8 +62,10 @@ export default {
     togglePlay() {
       if (this.video.paused || this.video.ended) {
         this.video.play();
+        this.videoPaused = false;
       } else {
         this.video.pause();
+        this.videoPaused = true;
       }
     },
     showControls() {
@@ -73,7 +88,7 @@ export default {
 .controls {
   padding: 0px;
   width: 100%;
-  background-color: rgba(14, 21, 58, 0.514);
+  background-color: rgba(5, 14, 59, 0.973);
 }
 video {
   width: 100%;
