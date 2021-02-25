@@ -17,7 +17,7 @@
       <template>
         <v-bottom-sheet
           attach=".video-wrapper"
-          v-model="sheet"
+          v-model="controlsShown"
           hide-overlay
         >
           <v-sheet>
@@ -37,7 +37,7 @@
 export default {
   data() {
     return {
-      sheet: false,
+      controlsShown: false,
     };
   },
   computed: {
@@ -54,10 +54,10 @@ export default {
       }
     },
     showControls() {
-      this.sheet = true;
+      this.controlsShown = true;
     },
     hideControls() {
-      setTimeout(() => this.sheet = false, 0)
+      setTimeout(() => this.controlsShown = false, 500)
     },
   },
 };
