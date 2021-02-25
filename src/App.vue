@@ -2,24 +2,24 @@
   <v-app>
     <v-main>
       <div id="app">
-        <div>
+        <!-- <div>
           <h1>Video Player</h1>
           <button id="chooseButton">Choose Video</button>
-        </div>
-        <Player v-show="false" />
+        </div> -->
+        <PlayerCore v-show="true"/>
       </div>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import Player from "./components/Player.vue";
+import PlayerCore from "./components/PlayerCore.vue";
 
 export default {
   name: "App",
 
   components: {
-    Player,
+    PlayerCore,
   },
 
   data: () => ({
@@ -28,7 +28,7 @@ export default {
 };
 </script>
 <style>
-#app {
+/* #app {
   margin: 0px !important;
   padding: 0px !important;
   background-image: linear-gradient(to bottom right, rgb(23, 162, 194), rgb(167, 90, 206), rgb(209, 66, 75));
@@ -36,7 +36,7 @@ export default {
   background-size: cover;
   background-attachment: fixed;
   background-color: #0e153a;
-}
+} */
 @import url("https://fonts.googleapis.com/css?family=Poppins");
 h1 {
   font-family: "Poppins";
