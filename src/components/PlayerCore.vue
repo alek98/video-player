@@ -25,15 +25,21 @@
         >
           <v-card tile>
             <div class="controls">
-              <!-- progress bar -->
-              <v-progress-linear
-                :value="50"
-                class="my-0"
-                height="5"
-              ></v-progress-linear>
+              <v-slider
+                dense
+                max="50"
+                min="-50"
+                height="30"
+                hide-details="true"
+                thumb-label
+                step="0.01"
+                color="#3d5af1"
+                track-color="#22d1ee"
+                value="10"
+              ></v-slider>
 
               <!-- play || payse button -->
-              <v-btn icon color="#e2f3f5" @click="togglePlay()">
+              <v-btn icon color="#0e153a" @click="togglePlay()">
                 <v-icon medium v-show="videoPaused"> mdi-play </v-icon>
                 <v-icon medium v-show="!videoPaused"> mdi-pause </v-icon>
               </v-btn>
@@ -88,10 +94,19 @@ export default {
 .controls {
   padding: 0px;
   width: 100%;
-  background-color: rgba(5, 14, 59, 0.973);
+  background-color: rgba(226, 243, 245, 0.769);
 }
 video {
   width: 100%;
   height: 100%;
+}
+
+.v-slider--horizontal .v-slider__track-container {
+  height: 4px !important;
+}
+
+.v-slider--horizontal .v-slider__track-background,
+.v-slider--horizontal .v-slider__track-fill {
+  border-radius: 20px;
 }
 </style>
