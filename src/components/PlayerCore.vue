@@ -8,14 +8,19 @@
       @mouseenter="showControls()"
       @mouseleave="hideControls()"
     >
-      <video ref="videoPlayer" @click="togglePlay()">
+      <video
+        ref="videoPlayer"
+        @click="togglePlay()"
+        @loadedmetadata="onLoadedMetadata()"
+        @timeupdate="onTimeUpdate()"
+      >
         <source
           src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4#t=0.5"
         />
       </video>
 
       <!-- video controls -->
-      <template>
+      <template v-if="video">
         <v-bottom-sheet
           attach=".video-wrapper"
           v-model="controlsShown"
@@ -26,16 +31,17 @@
           <v-card tile>
             <div class="controls">
               <v-slider
+                min="0"
+                :max="videoDuration"
+                :value="videoCurrentTime"
+                @input="onSliderInput($event)"
                 dense
-                max="50"
-                min="-50"
                 height="30"
                 hide-details="true"
                 thumb-label
                 step="0.01"
                 color="#3d5af1"
                 track-color="#22d1ee"
-                value="10"
               ></v-slider>
 
               <!-- play || payse button -->
@@ -57,13 +63,12 @@ export default {
     return {
       controlsShown: true,
       videoPaused: true,
+      video: undefined,
+      videoDuration: undefined,
+      videoCurrentTime: 0,
     };
   },
-  computed: {
-    video() {
-      return this.$refs.videoPlayer;
-    },
-  },
+  computed: {},
   methods: {
     togglePlay() {
       if (this.video.paused || this.video.ended) {
@@ -79,6 +84,22 @@ export default {
     },
     hideControls() {
       setTimeout(() => (this.controlsShown = false), 0);
+    },
+    onLoadedMetadata() {
+      this.video = this.$refs.videoPlayer;
+      this.videoDuration = (this.video.duration / 60).toFixed(2);
+    },
+    onTimeUpdate() {
+      this.videoCurrentTime = (this.video.currentTime / 60).toFixed(2);
+    },
+    onSliderInput(event) {
+      //event is a number, videoCurrentTime is a string
+      // if those two are equal, everything is normal
+      // if those two are not equal, that means that user is sliding the slider bar
+      if (event != this.videoCurrentTime) {
+        this.video.currentTime = event * 60;
+        return;
+      } 
     },
   },
 };
