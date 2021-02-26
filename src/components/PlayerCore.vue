@@ -28,29 +28,31 @@
           persistent
           :no-click-animation="true"
         >
-          <v-card tile>
-            <div class="controls">
-              <v-slider
-                min="0"
-                :max="videoDuration"
-                :value="videoCurrentTime"
-                @input="onSliderInput($event)"
-                dense
-                height="30"
-                hide-details="true"
-                thumb-label
-                step="0.01"
-                color="#3d5af1"
-                track-color="#22d1ee"
-              ></v-slider>
+          <div class="controls">
+            <!-- slider -->
+            <v-slider
+              min="0"
+              :max="videoDuration"
+              :value="videoCurrentTime"
+              @input="onSliderInput($event)"
+              dense
+              height="30"
+              hide-details="true"
+              thumb-label
+              step="0.01"
+              color="#3d5af1"
+              track-color="#22d1ee"
+            ></v-slider>
 
-              <!-- play || payse button -->
-              <v-btn icon color="#0e153a" @click="togglePlay()">
-                <v-icon medium v-show="videoPaused"> mdi-play </v-icon>
-                <v-icon medium v-show="!videoPaused"> mdi-pause </v-icon>
-              </v-btn>
-            </div>
-          </v-card>
+            <!-- play || payse button -->
+            <v-btn icon color="#0e153a" @click="togglePlay()">
+              <v-icon medium v-show="videoPaused"> mdi-play </v-icon>
+              <v-icon medium v-show="!videoPaused"> mdi-pause </v-icon>
+            </v-btn>
+            <!-- time -->
+            <!-- TODO: FIX TIME NOT UPDATING PROPERLY -->
+            <div class="time">{{ videoCurrentTime }} / {{ videoDuration }}</div>
+          </div>
         </v-bottom-sheet>
       </template>
     </v-container>
@@ -99,7 +101,7 @@ export default {
       if (event != this.videoCurrentTime) {
         this.video.currentTime = event * 60;
         return;
-      } 
+      }
     },
   },
 };
@@ -115,17 +117,21 @@ export default {
 .controls {
   padding: 0px;
   width: 100%;
-  background-color: rgba(226, 243, 245, 0.769);
+  background-color: rgb(247, 247, 247);
+}
+.time {
+  display: inline;
+  color: rgb(71, 71, 71);
 }
 video {
   width: 100%;
   height: 100%;
 }
 
+/* slider css */
 .v-slider--horizontal .v-slider__track-container {
   height: 4px !important;
 }
-
 .v-slider--horizontal .v-slider__track-background,
 .v-slider--horizontal .v-slider__track-fill {
   border-radius: 20px;
