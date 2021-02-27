@@ -39,7 +39,7 @@
               height="30"
               hide-details="true"
               thumb-label
-              step="0.01"
+              step="1"
               color="#3d5af1"
               track-color="#22d1ee"
             ></v-slider>
@@ -51,7 +51,9 @@
             </v-btn>
             <!-- time -->
             <!-- TODO: FIX TIME NOT UPDATING PROPERLY -->
-            <div class="time">{{ videoCurrentTime }} / {{ videoDuration }}</div>
+            <div class="time">
+              {{ getVideoCurrentTimeFormated }} / {{ getVideoDurationFormated }}
+            </div>
           </div>
         </v-bottom-sheet>
       </template>
@@ -70,7 +72,22 @@ export default {
       videoCurrentTime: 0,
     };
   },
-  computed: {},
+  computed: {
+    getVideoDurationFormated() {
+      let duration = this.videoDuration;
+      // format : "01:56:30"
+      let formated = new Date(duration * 1000).toISOString().substr(11, 8);
+      let [hours, minutes, seconds] = formated.split(":");
+      return `${hours === "00" ? "" : hours + ":"}${minutes}:${seconds}`;
+    },
+    getVideoCurrentTimeFormated() {
+      let currentTime = this.videoCurrentTime;
+      // format : "01:56:30"
+      let formated = new Date(currentTime * 1000).toISOString().substr(11, 8);
+      let [hours, minutes, seconds] = formated.split(":");
+      return `${hours === "00" ? "" : hours + ":"}${minutes}:${seconds}`;
+    },
+  },
   methods: {
     togglePlay() {
       if (this.video.paused || this.video.ended) {
@@ -89,17 +106,19 @@ export default {
     },
     onLoadedMetadata() {
       this.video = this.$refs.videoPlayer;
-      this.videoDuration = (this.video.duration / 60).toFixed(2);
+      this.videoDuration = this.video.duration;
     },
     onTimeUpdate() {
-      this.videoCurrentTime = (this.video.currentTime / 60).toFixed(2);
+      this.videoCurrentTime = Math.floor(this.video.currentTime);
     },
     onSliderInput(event) {
-      //event is a number, videoCurrentTime is a string
-      // if those two are equal, everything is normal
+      // event is an integer in seconds
+      // videoCurrentTime is an integer in seconds
+      // those two should be equal
       // if those two are not equal, that means that user is sliding the slider bar
+      // both event and videoCurrentTime must be rounded to int
       if (event != this.videoCurrentTime) {
-        this.video.currentTime = event * 60;
+        this.video.currentTime = event;
         return;
       }
     },
