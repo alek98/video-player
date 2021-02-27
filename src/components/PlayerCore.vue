@@ -30,33 +30,104 @@
         >
           <div class="controls">
             <!-- slider -->
-            <v-slider
-              min="0"
-              :max="videoDuration"
-              :value="videoCurrentTime"
-              @input="onSliderInput($event)"
-              dense
-              height="30"
-              hide-details="true"
-              thumb-label
-              step="1"
-              color="#3d5af1"
-              track-color="#22d1ee"
-            >
-              <template v-slot:thumb-label="{}">
-                {{ getVideoCurrentTimeFormated }}
-              </template>
-            </v-slider>
+            <div id="timeSlider">
+              <v-slider
+                min="0"
+                :max="videoDuration"
+                :value="videoCurrentTime"
+                @input="onSliderInput($event)"
+                dense
+                height="30"
+                hide-details="true"
+                thumb-label
+                step="1"
+                color="#3d5af1"
+                track-color="#22d1ee"
+              >
+                <template v-slot:thumb-label="{}">
+                  {{ getVideoCurrentTimeFormated }}
+                </template>
+              </v-slider>
+            </div>
+            <!-- actions and buttons -->
+            <div>
+              <v-container fluid pa-0 ma-0>
+                <v-row align="center">
+                  <v-col cols="1" class="pr-0 pl-4">
+                    <!-- play || payse button -->
+                    <v-btn small icon color="#0e153a" @click="togglePlay()">
+                      <v-icon medium v-show="videoPaused"> mdi-play </v-icon>
+                      <v-icon medium v-show="!videoPaused"> mdi-pause </v-icon>
+                    </v-btn>
+                  </v-col>
 
-            <!-- play || payse button -->
-            <v-btn icon color="#0e153a" @click="togglePlay()">
-              <v-icon medium v-show="videoPaused"> mdi-play </v-icon>
-              <v-icon medium v-show="!videoPaused"> mdi-pause </v-icon>
-            </v-btn>
-            <!-- time -->
-            <!-- TODO: FIX TIME NOT UPDATING PROPERLY -->
-            <div class="time">
-              {{ getVideoCurrentTimeFormated }} / {{ getVideoDurationFormated }}
+                  <v-col cols="1" class="pl-0 pr-0">
+                    <!-- time -->
+                    <div class="time">
+                      {{ getVideoCurrentTimeFormated }} /
+                      {{ getVideoDurationFormated }}
+                    </div>
+                  </v-col>
+
+                  <v-col cols="2" class="pl-4 pr-0">
+                    <!-- volume -->
+                    <div id="volumeSlider">
+                      <v-slider
+                        value="30"
+                        step="10"
+                        dense
+                        hide-details="true"
+                        thumb-color="#0e153a"
+                      >
+                        <template v-slot:prepend>
+                          <v-icon v-show="volume >= 50">
+                            mdi-volume-high
+                          </v-icon>
+                          <v-icon v-show="volume > 0 && volume < 50">
+                            mdi-volume-medium
+                          </v-icon>
+                          <v-icon v-show="volume == 0">
+                            mdi-volume-mute
+                          </v-icon>
+                        </template>
+                      </v-slider>
+                    </div>
+                  </v-col>
+
+                  <v-spacer />
+                  <v-spacer />
+
+                  <v-col cols="2">
+                    <!-- playback rate -->
+                    <div id="playbackRateSlider">
+                      <v-slider
+                        value="30"
+                        step="10"
+                        dense
+                        hide-details="true"
+                        thumb-color="#0e153a"
+                      >
+                        <template v-slot:prepend>
+                          <v-icon v-show="volume >= 50">
+                            mdi-play-speed
+                          </v-icon>
+                        </template>
+                      </v-slider>
+                    </div>
+                  </v-col>
+
+                  <v-col cols="1">
+                    <v-btn small icon color="#0e153a">
+                      <v-icon medium v-show="videoPaused">
+                        mdi-fullscreen
+                      </v-icon>
+                      <v-icon medium v-show="!videoPaused">
+                        mdi-fullscreen-exit
+                      </v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-container>
             </div>
           </div>
         </v-bottom-sheet>
@@ -74,6 +145,7 @@ export default {
       video: undefined,
       videoDuration: undefined,
       videoCurrentTime: 0,
+      volume: 100,
     };
   },
   computed: {
@@ -144,19 +216,41 @@ export default {
 }
 .time {
   display: inline;
-  color: rgb(71, 71, 71);
+  color: rgb(87, 86, 86);
+  font-size: 13px;
 }
 video {
   width: 100%;
   height: 100%;
 }
 
-/* slider css */
-.v-slider--horizontal .v-slider__track-container {
+/* only time slider css */
+#timeSlider .v-slider__track-container {
   height: 4px !important;
 }
 .v-slider--horizontal .v-slider__track-background,
 .v-slider--horizontal .v-slider__track-fill {
   border-radius: 20px;
+}
+
+#playbackRateSlider
+  .v-slider__thumb-container--active
+  .v-slider__thumb::before {
+  transform: scale(1.2) !important;
+}
+#playbackRateSlider .v-slider__thumb::before {
+  width: 28px !important;
+  height: 28px !important;
+  left: -8px !important;
+  top: -8px !important;
+}
+#volumeSlider .v-slider__thumb-container--active .v-slider__thumb::before {
+  transform: scale(1.2) !important;
+}
+#volumeSlider .v-slider__thumb::before {
+  width: 28px !important;
+  height: 28px !important;
+  left: -8px !important;
+  top: -8px !important;
 }
 </style>
