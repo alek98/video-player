@@ -42,7 +42,11 @@
               step="1"
               color="#3d5af1"
               track-color="#22d1ee"
-            ></v-slider>
+            >
+              <template v-slot:thumb-label="{}">
+                {{ getVideoCurrentTimeFormated }}
+              </template>
+            </v-slider>
 
             <!-- play || payse button -->
             <v-btn icon color="#0e153a" @click="togglePlay()">
