@@ -73,17 +73,20 @@
                     <!-- volume -->
                     <div id="volumeSlider">
                       <v-slider
-                        value="30"
-                        step="10"
+                        :value="volume"
+                        max="1"
+                        min="0"
+                        step="0.1"
                         dense
                         hide-details="true"
                         thumb-color="#0e153a"
+                        @input="onVolumeInput($event)"
                       >
                         <template v-slot:prepend>
-                          <v-icon v-show="volume >= 50">
+                          <v-icon v-show="volume >= 0.5">
                             mdi-volume-high
                           </v-icon>
-                          <v-icon v-show="volume > 0 && volume < 50">
+                          <v-icon v-show="volume > 0 && volume < 0.5">
                             mdi-volume-medium
                           </v-icon>
                           <v-icon v-show="volume == 0">
@@ -145,7 +148,7 @@ export default {
       video: undefined,
       videoDuration: undefined,
       videoCurrentTime: 0,
-      volume: 100,
+      volume: 1,
     };
   },
   computed: {
@@ -197,6 +200,11 @@ export default {
         this.video.currentTime = event;
         return;
       }
+    },
+    onVolumeInput(event) {
+      // volume is in range [0,1]
+      this.video.volume = event;
+      this.volume = event;
     },
   },
 };
