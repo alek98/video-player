@@ -53,7 +53,7 @@
             <div>
               <v-container fluid pa-0 ma-0>
                 <v-row align="center">
-                  <v-col cols="1" class="pr-0 pl-4">
+                  <v-col cols="1" class="pr-0 pl-0" align="center">
                     <!-- play || payse button -->
                     <v-btn small icon color="#0e153a" @click="togglePlay()">
                       <v-icon medium v-show="videoPaused"> mdi-play </v-icon>
@@ -61,7 +61,7 @@
                     </v-btn>
                   </v-col>
 
-                  <v-col cols="1" class="pl-0 pr-0">
+                  <v-col cols="1" class="pl-0 pr-0" align="left">
                     <!-- time -->
                     <div class="time">
                       {{ getVideoCurrentTimeFormated }} /
@@ -98,17 +98,22 @@
                   </v-col>
 
                   <v-spacer />
-                  <v-spacer />
 
                   <v-col cols="2">
                     <!-- playback rate -->
                     <div id="playbackRateSlider">
                       <v-slider
-                        value="30"
-                        step="10"
+                        value="1"
+                        max="2"
+                        min="0.5"
+                        step="0.05"
                         dense
                         hide-details="true"
-                        thumb-color="#0e153a"
+                        thumb-label
+                        :color="playbackRateColor"
+                        :thumb-color="playbackRateColor"
+                        :thumb-size="playbackRateThumbSize"
+                        @input="onPlaybackRateInput($event)"
                       >
                         <template v-slot:prepend>
                           <v-icon v-show="volume >= 50">
@@ -119,7 +124,7 @@
                     </div>
                   </v-col>
 
-                  <v-col cols="1">
+                  <v-col cols="1" align="right">
                     <v-btn small icon color="#0e153a">
                       <v-icon medium v-show="videoPaused">
                         mdi-fullscreen
@@ -149,6 +154,7 @@ export default {
       videoDuration: undefined,
       videoCurrentTime: 0,
       volume: 1,
+      playbackRate: 1,
     };
   },
   computed: {
@@ -165,6 +171,24 @@ export default {
       let formated = new Date(currentTime * 1000).toISOString().substr(11, 8);
       let [hours, minutes, seconds] = formated.split(":");
       return `${hours === "00" ? "" : hours + ":"}${minutes}:${seconds}`;
+    },
+    playbackRateColor() {
+      if (this.playbackRate == 1) {
+        return "rgb(63, 182, 110)";
+      } else if (this.playbackRate < 1) {
+        return "rgb(63, 128, 182)";
+      } else if (this.playbackRate > 1 && this.playbackRate <= 1.5) {
+        return "rgb(228, 189, 98)";
+      } else {
+        return "rgb(226, 113, 117)";
+      }
+    },
+    playbackRateThumbSize() {
+      if (this.playbackRate == 1) {
+        return 42;
+      } else {
+        return 28;
+      }
     },
   },
   methods: {
@@ -205,6 +229,10 @@ export default {
       // volume is in range [0,1]
       this.video.volume = event;
       this.volume = event;
+    },
+    onPlaybackRateInput(event) {
+      this.video.playbackRate = event;
+      this.playbackRate = event;
     },
   },
 };
