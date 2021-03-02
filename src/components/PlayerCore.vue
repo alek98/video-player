@@ -63,7 +63,7 @@
 
                   <v-col cols="1" class="pl-0 pr-0" align="left">
                     <!-- time -->
-                    <div class="time">
+                    <div class="lightText">
                       {{ getVideoCurrentTimeFormated }} /
                       {{ getVideoDurationFormated }}
                     </div>
@@ -71,7 +71,7 @@
 
                   <v-col cols="2" class="pl-4 pr-0">
                     <!-- volume -->
-                    <div id="volumeSlider">
+                    <div id="volumeSlider" class="sliderWidth">
                       <v-slider
                         :value="volume"
                         max="1"
@@ -93,6 +93,9 @@
                             mdi-volume-mute
                           </v-icon>
                         </template>
+                        <template v-slot:append>
+                          <div class="pt-1 lightText">{{ volume * 100 }}%</div>
+                        </template>
                       </v-slider>
                     </div>
                   </v-col>
@@ -101,27 +104,31 @@
 
                   <v-col cols="2">
                     <!-- playback rate -->
-                    <div id="playbackRateSlider">
+                    <div id="playbackRateSlider" class="sliderWidth">
                       <v-slider
-                        value="1"
+                        :value="playbackRate"
                         max="2"
                         min="0.5"
                         step="0.05"
                         dense
                         hide-details="true"
-                        thumb-label
                         :color="playbackRateColor"
                         :thumb-color="playbackRateColor"
                         :thumb-size="playbackRateThumbSize"
                         @input="onPlaybackRateInput($event)"
                       >
                         <template v-slot:prepend>
-                          <v-icon v-show="volume >= 50">
-                            mdi-play-speed
-                          </v-icon>
+                          <!-- reset playback rate on click -->
+                          <v-btn small icon @click="onPlaybackRateInput(1)">
+                            <v-icon> mdi-play-speed </v-icon>
+                          </v-btn>
                         </template>
                       </v-slider>
                     </div>
+                  </v-col>
+
+                  <v-col cols="1" align="left">
+                    <div class="lightText">{{ playbackRate }}x</div>
                   </v-col>
 
                   <v-col cols="1" align="right">
@@ -250,10 +257,12 @@ export default {
   width: 100%;
   background-color: rgb(247, 247, 247);
 }
-.time {
-  display: inline;
+.lightText {
   color: rgb(87, 86, 86);
-  font-size: 13px;
+  font-size: 14px;
+}
+.sliderWidth {
+  width: 200px;
 }
 video {
   width: 100%;
