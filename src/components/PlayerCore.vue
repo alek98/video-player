@@ -26,6 +26,7 @@
           v-model="controlsShown"
           hide-overlay
           persistent
+          width="80%"
           :no-click-animation="true"
         >
           <div class="controls">
@@ -69,7 +70,7 @@
                     </div>
                   </v-col>
 
-                  <v-col cols="2" class="pl-4 pr-0">
+                  <v-col class="pl-4 pr-0">
                     <!-- volume -->
                     <div id="volumeSlider" class="sliderWidth">
                       <v-slider
@@ -100,38 +101,39 @@
                     </div>
                   </v-col>
 
-                  <v-spacer />
-
-                  <v-col cols="2">
-                    <!-- playback rate -->
-                    <div id="playbackRateSlider" class="sliderWidth">
-                      <v-slider
-                        :value="playbackRate"
-                        max="2"
-                        min="0.5"
-                        step="0.05"
-                        dense
-                        hide-details="true"
-                        :color="playbackRateColor"
-                        :thumb-color="playbackRateColor"
-                        :thumb-size="playbackRateThumbSize"
-                        @input="onPlaybackRateInput($event)"
-                      >
-                        <template v-slot:prepend>
-                          <!-- reset playback rate on click -->
-                          <v-btn small icon @click="onPlaybackRateInput(1)">
-                            <v-icon> mdi-play-speed </v-icon>
-                          </v-btn>
-                        </template>
-                      </v-slider>
-                    </div>
+                  <v-col align="right">
+                    <v-row align="center">
+                      <v-col align="right" class="pr-0">
+                        <!-- playback rate -->
+                        <div id="playbackRateSlider" class="sliderWidth">
+                          <v-slider
+                            :value="playbackRate"
+                            max="2"
+                            min="0.5"
+                            step="0.05"
+                            dense
+                            hide-details="true"
+                            :color="playbackRateColor"
+                            :thumb-color="playbackRateColor"
+                            :thumb-size="playbackRateThumbSize"
+                            @input="onPlaybackRateInput($event)"
+                          >
+                            <template v-slot:prepend>
+                              <!-- reset playback rate on click -->
+                              <v-btn small icon @click="onPlaybackRateInput(1)">
+                                <v-icon> mdi-play-speed </v-icon>
+                              </v-btn>
+                            </template>
+                          </v-slider>
+                        </div>
+                      </v-col>
+                      <v-col cols="1" align="left" class="pt-2">
+                        <div class="lightText">{{ playbackRate }}x</div>
+                      </v-col>
+                    </v-row>
                   </v-col>
 
-                  <v-col cols="1" align="left">
-                    <div class="lightText">{{ playbackRate }}x</div>
-                  </v-col>
-
-                  <v-col cols="1" align="right">
+                  <v-col cols="1" align="center">
                     <v-btn small icon color="#0e153a">
                       <v-icon medium v-show="videoPaused">
                         mdi-fullscreen
@@ -253,16 +255,20 @@ export default {
   height: 100vh;
 }
 .controls {
-  padding: 0px;
+  border-radius: 8px;
+  padding: 10px;
+  padding-top: 5px;
+  margin-bottom: 5px;
   width: 100%;
-  background-color: rgb(247, 247, 247);
+  background-color: rgba(247, 247, 247, 0.795);
 }
 .lightText {
   color: rgb(87, 86, 86);
-  font-size: 14px;
+  font-size: 13px;
+  white-space: nowrap;
 }
 .sliderWidth {
-  width: 200px;
+  max-width: 250px;
 }
 video {
   width: 100%;
