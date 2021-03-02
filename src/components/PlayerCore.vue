@@ -43,7 +43,7 @@
                 thumb-label
                 step="1"
                 color="#3d5af1"
-                track-color="#22d1ee"
+                track-color="#29bfd9"
               >
                 <template v-slot:thumb-label="{}">
                   {{ getVideoCurrentTimeFormated }}
@@ -80,17 +80,21 @@
                         step="0.1"
                         dense
                         hide-details="true"
-                        thumb-color="#0e153a"
+                        color="#2d6cdf"
+                        track-color="#2d6cdf"
                         @input="onVolumeInput($event)"
                       >
                         <template v-slot:prepend>
-                          <v-icon v-show="volume >= 0.5">
+                          <v-icon color="#0e153a" v-show="volume >= 0.5">
                             mdi-volume-high
                           </v-icon>
-                          <v-icon v-show="volume > 0 && volume < 0.5">
+                          <v-icon
+                            color="#0e153a"
+                            v-show="volume > 0 && volume < 0.5"
+                          >
                             mdi-volume-medium
                           </v-icon>
-                          <v-icon v-show="volume == 0">
+                          <v-icon color="#0e153a" v-show="volume == 0">
                             mdi-volume-mute
                           </v-icon>
                         </template>
@@ -114,13 +118,19 @@
                             dense
                             hide-details="true"
                             :color="playbackRateColor"
+                            track-color="#29bfd9"
                             :thumb-color="playbackRateColor"
                             :thumb-size="playbackRateThumbSize"
                             @input="onPlaybackRateInput($event)"
                           >
                             <template v-slot:prepend>
                               <!-- reset playback rate on click -->
-                              <v-btn small icon @click="onPlaybackRateInput(1)">
+                              <v-btn
+                                small
+                                icon
+                                @click="onPlaybackRateInput(1)"
+                                color="#0e153a"
+                              >
                                 <v-icon> mdi-play-speed </v-icon>
                               </v-btn>
                             </template>
@@ -260,15 +270,15 @@ export default {
   padding-top: 5px;
   margin-bottom: 5px;
   width: 100%;
-  background-color: rgba(247, 247, 247, 0.795);
+  background-color: rgba(236, 245, 247, 0.74);
 }
 .lightText {
-  color: rgb(87, 86, 86);
+  color: #0e153a;
   font-size: 13px;
   white-space: nowrap;
 }
 .sliderWidth {
-  max-width: 250px;
+  max-width: 200px;
 }
 video {
   width: 100%;
