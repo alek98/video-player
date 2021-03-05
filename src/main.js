@@ -1,6 +1,7 @@
 // import { ipcRenderer } from 'electron'
 import Vue from 'vue'
 import App from './App.vue'
+import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false
 
@@ -8,5 +9,6 @@ Vue.config.productionTip = false
 
 
 new Vue({
-  render: h => h(App),
+  vuetify,
+  render: h => h(App)
 }).$mount('#app')
