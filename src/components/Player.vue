@@ -1,23 +1,22 @@
 <template>
   <div>
-    <PlayerCore :videoPath='videoPath'/>
+    <PlayerCore :videoPath="videoPath" />
   </div>
 </template>
 
 <script>
-import {mapActions} from 'vuex'
-import PlayerCore from './PlayerCore';
+import { mapActions } from "vuex";
+import PlayerCore from "./PlayerCore";
 import { ipcRenderer } from "electron";
 
 export default {
   components: {
     PlayerCore,
   },
-  
 
   data() {
     return {
-      videoPath: 'asdf',
+      videoPath: "asdf",
     };
   },
   created() {
@@ -32,7 +31,9 @@ export default {
 
   methods: {
     ...mapActions({
-      togglePlayVideo: 'togglePlayVideo',
+      togglePlayVideo: "togglePlayVideo",
+      forward: "forward",
+      backward: "backward",
     }),
     addRenderer() {
       ipcRenderer.on("video-path-channel", (event, videoPath) => {
@@ -55,10 +56,10 @@ export default {
             this.togglePlayVideo();
             break;
           case "ArrowLeft":
-            this.zoomIn();
+            this.backward();
             break;
           case "ArrowRight":
-            this.zoomOut();
+            this.forward();
             break;
           default:
             return;

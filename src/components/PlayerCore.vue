@@ -165,7 +165,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from "vuex";
 export default {
   props: ["videoPath"],
 
@@ -173,7 +173,6 @@ export default {
     return {
       controlsShown: true,
       volume: 1,
-      playbackRate: 1,
       fullscreen: false,
     };
   },
@@ -212,11 +211,12 @@ export default {
       }
     },
     ...mapGetters({
-      video: 'getVideo',
-      videoDuration: 'getVideoDuration',
-      videoCurrentTime: 'getVideoCurrentTime',
-      videoPaused: 'getVideoPaused',
-    })
+      video: "getVideo",
+      videoDuration: "getVideoDuration",
+      videoCurrentTime: "getVideoCurrentTime",
+      videoPaused: "getVideoPaused",
+      playbackRate: "getPlaybackRate",
+    }),
   },
 
   watch: {
@@ -230,11 +230,12 @@ export default {
 
   methods: {
     ...mapActions({
-      togglePlayVideo: 'togglePlayVideo',
-      setVideo: 'setVideo',
-      setVideoDuration: 'setVideoDuration',
-      setVideoCurrentTime: 'setVideoCurrentTime',
-      setVideoPaused: 'setVideoPaused',
+      togglePlayVideo: "togglePlayVideo",
+      setVideo: "setVideo",
+      setVideoDuration: "setVideoDuration",
+      setVideoCurrentTime: "setVideoCurrentTime",
+      setVideoPaused: "setVideoPaused",
+      setPlaybackRate: "setPlaybackRate",
     }),
     togglePlay() {
       this.togglePlayVideo();
@@ -277,7 +278,7 @@ export default {
     },
     onPlaybackRateInput(event) {
       this.video.playbackRate = event;
-      this.playbackRate = event;
+      this.setPlaybackRate(event);
     },
     toggleFullscreen() {
       if (this.fullscreen) {
