@@ -3,22 +3,22 @@
     <v-main>
       <div id="app" v-show="videoPathExists==false">
         <h1>Video Player</h1>
-        <button id="chooseButton" @click="chooseVideo()"> Choose Video </button>
-        <PlayerCore v-show="true"/>
+        <button id="chooseButton" @click="chooseVideo()"> Choose Video </button>       
       </div>
+      <Player v-show="videoPathExists==true"/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import PlayerCore from "./components/PlayerCore.vue";
+import Player from "./components/Player.vue";
 import {ipcRenderer, remote} from 'electron'
 const {dialog} = remote
 export default {
   name: "App",
 
   components: {
-    PlayerCore,
+    Player,
   },
 
   data(){
@@ -57,11 +57,6 @@ export default {
 
 </script>
 
-  data: () => ({
-    //
-  }),
-};
-</script>
 <style>
 #app {
   margin: 0px !important;

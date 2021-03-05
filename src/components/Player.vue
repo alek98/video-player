@@ -1,41 +1,22 @@
 <template>
   <div>
-    <div class="my-wrapper" v-show="canPlayVideo == true">
-      <videoPlayer
-        class="video-js vjs-default-skin vjs-big-play-centered"
-        :options="playerOptions"
-        ref="videoPlayer"
-        @canplay="onCanplay()"
-        @error="onError()"
-      />
-    </div>
-
-    <div id="problem" v-show="canPlayVideo == false">
-      We can't play this video. Please try again.
-    </div>
+    <PlayerCore :videoPath='videoPath'/>
   </div>
 </template>
 
 <script>
-import { videoPlayer } from "vue-video-player";
-import "video.js/dist/video-js.css";
+import PlayerCore from './PlayerCore';
 import { ipcRenderer } from "electron";
 
 export default {
   components: {
-    videoPlayer,
+    PlayerCore,
   },
+  
 
   data() {
     return {
-      playerOptions: {
-        muted: false,
-        language: "en",
-        playbackRates: [0.75, 1.0, 1.25, 1.5, 1.75, 1.9, 2.0],
-      },
-      /*TODO:   fix video.js changing source error code 4.
-       */
-      canPlayVideo: null, //by default there is no video path
+      videoPath: 'asdf',
     };
   },
   created() {
@@ -56,73 +37,70 @@ export default {
           "color:darkblue; background-color:yellow",
           videoPath
         );
-        this.player.src({
-          src: videoPath,
-          type: "video/mp4",
-        });
+        this.videoPath = videoPath;
       });
     },
 
-    addKeyListeners() {
-      window.addEventListener("keydown", (event) => {
-        if (event.defaultPrevented) {
-          return; // Do nothing if the event was already processed
-        }
-        switch (event.key) {
-          case " ":
-            this.playOrPause();
-            break;
-          case "ArrowLeft":
-            this.zoomIn();
-            break;
-          case "ArrowRight":
-            this.zoomOut();
-            break;
-          default:
-            return;
-        }
-        event.preventDefault();
-      });
-    },
+    // addKeyListeners() {
+    //   window.addEventListener("keydown", (event) => {
+    //     if (event.defaultPrevented) {
+    //       return; // Do nothing if the event was already processed
+    //     }
+    //     switch (event.key) {
+    //       case " ":
+    //         this.playOrPause();
+    //         break;
+    //       case "ArrowLeft":
+    //         this.zoomIn();
+    //         break;
+    //       case "ArrowRight":
+    //         this.zoomOut();
+    //         break;
+    //       default:
+    //         return;
+    //     }
+    //     event.preventDefault();
+    //   });
+    // },
 
-    playOrPause() {
-      let paused = this.player.paused();
-      if (paused) {
-        this.player.play();
-      } else {
-        this.player.pause();
-      }
-    },
+    // playOrPause() {
+    //   let paused = this.player.paused();
+    //   if (paused) {
+    //     this.player.play();
+    //   } else {
+    //     this.player.pause();
+    //   }
+    // },
 
-    forward() {
-      // seek forward 5 * playbackRate seconds
-      let time = this.player.currentTime() + 5 * this.player.playbackRate();
-      this.player.currentTime(time);
-    },
-    backward() {
-      // seek backward 5 * playbackRate seconds
-      let time = this.player.currentTime() - 5 * this.player.playbackRate();
-      this.player.currentTime(time);
-    },
-    zoomIn() {
-      let videoElem = document.getElementsByTagName("video")[0];
-      videoElem.className = "videoZoomIn";
-      videoElem.style.animation = "zoomIn 0.2s linear";
-    },
-    zoomOut() {
-      let videoElem = document.getElementsByTagName("video")[0];
-      videoElem.className = "videoZoomOut";
-      videoElem.style.animation = "zoomOut 0.2s linear";
-    },
+    // forward() {
+    //   // seek forward 5 * playbackRate seconds
+    //   let time = this.player.currentTime() + 5 * this.player.playbackRate();
+    //   this.player.currentTime(time);
+    // },
+    // backward() {
+    //   // seek backward 5 * playbackRate seconds
+    //   let time = this.player.currentTime() - 5 * this.player.playbackRate();
+    //   this.player.currentTime(time);
+    // },
+    // zoomIn() {
+    //   let videoElem = document.getElementsByTagName("video")[0];
+    //   videoElem.className = "videoZoomIn";
+    //   videoElem.style.animation = "zoomIn 0.2s linear";
+    // },
+    // zoomOut() {
+    //   let videoElem = document.getElementsByTagName("video")[0];
+    //   videoElem.className = "videoZoomOut";
+    //   videoElem.style.animation = "zoomOut 0.2s linear";
+    // },
 
-    onCanplay() {
-      console.log("can play");
-      this.canPlayVideo = true;
-    },
-    onError() {
-      console.log("cant play");
-      this.canPlayVideo = false;
-    },
+    // onCanplay() {
+    //   console.log("can play");
+    //   this.canPlayVideo = true;
+    // },
+    // onError() {
+    //   console.log("cant play");
+    //   this.canPlayVideo = false;
+    // },
   },
 };
 </script>

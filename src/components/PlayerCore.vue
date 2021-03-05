@@ -13,11 +13,7 @@
         @click="togglePlay()"
         @loadedmetadata="onLoadedMetadata()"
         @timeupdate="onTimeUpdate()"
-      >
-        <source
-          src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4#t=0.5"
-        />
-      </video>
+      ></video>
 
       <!-- video controls -->
       <template v-if="video">
@@ -170,6 +166,8 @@
 
 <script>
 export default {
+  props: ["videoPath"],
+
   data() {
     return {
       controlsShown: true,
@@ -182,6 +180,7 @@ export default {
       fullscreen: false,
     };
   },
+
   computed: {
     getVideoDurationFormated() {
       let duration = this.videoDuration;
@@ -216,6 +215,16 @@ export default {
       }
     },
   },
+
+  watch: {
+    videoPath(newVal) {
+      console.log("changing video source to: ", newVal);
+      let source = document.createElement("source");
+      source.setAttribute("src", newVal);
+      this.$refs.videoPlayer.appendChild(source);
+    },
+  },
+
   methods: {
     togglePlay() {
       if (this.video.paused || this.video.ended) {
