@@ -3,8 +3,8 @@ module.exports = {
     electronBuilder: {
       nodeIntegration: true
     }
-  }
+  },
+  transpileDependencies: [
+    'vuetify'
+  ],
 }
-transpileDependencies: [
-  'vuetify'
-]

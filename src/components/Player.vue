@@ -41,27 +41,27 @@ export default {
       });
     },
 
-    // addKeyListeners() {
-    //   window.addEventListener("keydown", (event) => {
-    //     if (event.defaultPrevented) {
-    //       return; // Do nothing if the event was already processed
-    //     }
-    //     switch (event.key) {
-    //       case " ":
-    //         this.playOrPause();
-    //         break;
-    //       case "ArrowLeft":
-    //         this.zoomIn();
-    //         break;
-    //       case "ArrowRight":
-    //         this.zoomOut();
-    //         break;
-    //       default:
-    //         return;
-    //     }
-    //     event.preventDefault();
-    //   });
-    // },
+    addKeyListeners() {
+      window.addEventListener("keydown", (event) => {
+        if (event.defaultPrevented) {
+          return; // Do nothing if the event was already processed
+        }
+        switch (event.key) {
+          case " ":
+            this.playOrPause();
+            break;
+          case "ArrowLeft":
+            this.zoomIn();
+            break;
+          case "ArrowRight":
+            this.zoomOut();
+            break;
+          default:
+            return;
+        }
+        event.preventDefault();
+      });
+    },
 
     // playOrPause() {
     //   let paused = this.player.paused();
@@ -106,50 +106,6 @@ export default {
 </script>
 
 <style>
-.my-wrapper {
-  width: 100%;
-  height: 100vh;
-  min-height: 290px;
-  overflow: hidden;
-}
-
-.video-js {
-  position: relative !important;
-  width: 100% !important;
-  height: 100% !important;
-  color: #e2f3f5;
-}
-.video-js .vjs-control-bar {
-  background: #0e153a85;
-}
-.video-js .vjs-slider-bar,
-.video-js .vjs-volume-level {
-  background: #22d1ee;
-}
-.video-js .vjs-playback-rate {
-  color: #e2f3f5;
-}
-.video-js .vjs-big-play-button {
-  color: #e2f3f5;
-  background: #3d5bf18f;
-  border-radius: 25px;
-  border-color: #e2f3f5;
-  border-width: 0px;
-  font-size: 35px;
-}
-.vjs-default-skin:hover .vjs-big-play-button {
-  color: #e2f3f5;
-  background: #3d5bf1;
-  border-radius: 25px;
-  border-color: #e2f3f5;
-  border-width: 0px;
-  font-size: 35px;
-}
-
-.vjs-loading-spinner {
-  display: none !important
-}
-
 /* zoom In and zoom Out classes and animations */
 .videoZoomIn {
   width: 200%;
@@ -196,15 +152,5 @@ export default {
     top: 50%;
     transform: translate(-50%, -50%);
   }
-}
-
-#problem {
-  font-size: 20px;
-  color: #e2f3f5;
-  background-color: #0e153a;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
 }
 </style>
