@@ -165,16 +165,13 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 export default {
   props: ["videoPath"],
 
   data() {
     return {
       controlsShown: true,
-      videoPaused: true,
-      video: undefined,
-      videoDuration: undefined,
-      videoCurrentTime: 0,
       volume: 1,
       playbackRate: 1,
       fullscreen: false,
@@ -214,6 +211,12 @@ export default {
         return 28;
       }
     },
+    ...mapGetters({
+      video: 'getVideo',
+      videoDuration: 'getVideoDuration',
+      videoCurrentTime: 'getVideoCurrentTime',
+      videoPaused: 'getVideoPaused',
+    })
   },
 
   watch: {
@@ -226,14 +229,22 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      togglePlayVideo: 'togglePlayVideo',
+      setVideo: 'setVideo',
+      setVideoDuration: 'setVideoDuration',
+      setVideoCurrentTime: 'setVideoCurrentTime',
+      setVideoPaused: 'setVideoPaused',
+    }),
     togglePlay() {
-      if (this.video.paused || this.video.ended) {
-        this.video.play();
-        this.videoPaused = false;
-      } else {
-        this.video.pause();
-        this.videoPaused = true;
-      }
+      this.togglePlayVideo();
+      // if (this.video.paused || this.video.ended) {
+      //   this.video.play();
+      //   this.setVideoPaused(false);
+      // } else {
+      //   this.video.pause();
+      //   this.setVideoPaused(true);
+      // }
     },
     showControls() {
       this.controlsShown = true;
@@ -242,11 +253,11 @@ export default {
       setTimeout(() => (this.controlsShown = false), 0);
     },
     onLoadedMetadata() {
-      this.video = this.$refs.videoPlayer;
-      this.videoDuration = this.video.duration;
+      this.setVideo(this.$refs.videoPlayer);
+      this.setVideoDuration(this.video.duration);
     },
     onTimeUpdate() {
-      this.videoCurrentTime = Math.floor(this.video.currentTime);
+      this.setVideoCurrentTime(Math.floor(this.video.currentTime));
     },
     onSliderInput(event) {
       // event is an integer in seconds

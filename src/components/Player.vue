@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 import PlayerCore from './PlayerCore';
 import { ipcRenderer } from "electron";
 
@@ -30,6 +31,9 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      togglePlayVideo: 'togglePlayVideo',
+    }),
     addRenderer() {
       ipcRenderer.on("video-path-channel", (event, videoPath) => {
         console.log(
@@ -48,7 +52,7 @@ export default {
         }
         switch (event.key) {
           case " ":
-            this.playOrPause();
+            this.togglePlayVideo();
             break;
           case "ArrowLeft":
             this.zoomIn();
