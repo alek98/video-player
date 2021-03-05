@@ -144,11 +144,16 @@
                   </v-col>
 
                   <v-col cols="1" align="center">
-                    <v-btn small icon color="#0e153a">
-                      <v-icon medium v-show="videoPaused">
+                    <v-btn
+                      small
+                      icon
+                      color="#0e153a"
+                      @click="toggleFullscreen()"
+                    >
+                      <v-icon medium v-show="!fullscreen">
                         mdi-fullscreen
                       </v-icon>
-                      <v-icon medium v-show="!videoPaused">
+                      <v-icon medium v-show="fullscreen">
                         mdi-fullscreen-exit
                       </v-icon>
                     </v-btn>
@@ -174,6 +179,7 @@ export default {
       videoCurrentTime: 0,
       volume: 1,
       playbackRate: 1,
+      fullscreen: false,
     };
   },
   computed: {
@@ -252,6 +258,15 @@ export default {
     onPlaybackRateInput(event) {
       this.video.playbackRate = event;
       this.playbackRate = event;
+    },
+    toggleFullscreen() {
+      if (this.fullscreen) {
+        document.exitFullscreen();
+        this.fullscreen = false;
+      } else {
+        document.documentElement.requestFullscreen();
+        this.fullscreen = true;
+      }
     },
   },
 };
