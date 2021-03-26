@@ -12,9 +12,9 @@
       <video
         ref="videoPlayer"
         @click="togglePlay()"
+        @mousedown="moveVideo($event)"
         @loadedmetadata="onLoadedMetadata()"
         @timeupdate="onTimeUpdate()"
-        @mousedown="moveVideo($event)"
         src="file:///Users/alek/Downloads/BigBuckBunny%205.mp4"
       ></video>
 
@@ -181,6 +181,7 @@ export default {
       videoX: undefined,
       videoLeft: 0,
       videoTop: 0,
+      nowDragging: false,
     };
   },
 
@@ -245,7 +246,10 @@ export default {
       setPlaybackRate: "setPlaybackRate",
     }),
     togglePlay() {
-      // this.togglePlayVideo();
+      if(this.nowDragging == false){
+        this.togglePlayVideo();
+      }
+      
       // if (this.video.paused || this.video.ended) {
       //   this.video.play();
       //   this.setVideoPaused(false);
@@ -307,7 +311,8 @@ export default {
       document.onmousemove = this.startDragging;
       document.onmouseup = this.stopDragging;
     },
-    startDragging(event){      
+    startDragging(event){ 
+      this.nowDragging = true;   
       let movementX = this.videoX - event.clientX;
       let movementY = this.videoY - event.clientY
 
@@ -323,6 +328,11 @@ export default {
     stopDragging(){
       document.onmousemove = null;
       document.onmouseup = null;
+      // onmouseup togglePlay() function will be triggered too
+      // with timeout, I'm preventing togglePlay() if user was draggin the video
+      setTimeout(() => {
+        this.nowDragging = false;
+      }, 10);
     }
 
   },
