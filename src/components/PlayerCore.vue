@@ -7,12 +7,15 @@
       class="video-wrapper"
       @mouseenter="showControls()"
       @mouseleave="hideControls()"
+      @drag="moveVideo($event)"
     >
       <video
         ref="videoPlayer"
         @click="togglePlay()"
         @loadedmetadata="onLoadedMetadata()"
         @timeupdate="onTimeUpdate()"
+        @mousedown="moveVideo($event)"
+        src="file:///Users/alek/Downloads/BigBuckBunny%205.mp4"
       ></video>
 
       <!-- video controls -->
@@ -174,6 +177,10 @@ export default {
       controlsShown: true,
       volume: 1,
       fullscreen: false,
+      videoY: undefined,
+      videoX: undefined,
+      videoLeft: 0,
+      videoTop: 0,
     };
   },
 
@@ -238,7 +245,7 @@ export default {
       setPlaybackRate: "setPlaybackRate",
     }),
     togglePlay() {
-      this.togglePlayVideo();
+      // this.togglePlayVideo();
       // if (this.video.paused || this.video.ended) {
       //   this.video.play();
       //   this.setVideoPaused(false);
@@ -289,6 +296,35 @@ export default {
         this.fullscreen = true;
       }
     },
+
+    moveVideo(event){
+      event.preventDefault();
+      this.videoY = event.clientY;
+      this.videoX = event.clientX;
+      this.videoTop = this.$refs.videoPlayer.offsetTop;
+      this.videoLeft = this.$refs.videoPlayer.offsetLeft;
+
+      document.onmousemove = this.startDragging;
+      document.onmouseup = this.stopDragging;
+    },
+    startDragging(event){      
+      let movementX = this.videoX - event.clientX;
+      let movementY = this.videoY - event.clientY
+
+      this.videoTop -= movementY;
+      this.videoLeft -= movementX;
+
+      this.videoY = event.clientY;
+      this.videoX = event.clientX;
+      
+      this.$refs.videoPlayer.style.top  = this.videoTop + 'px';
+      this.$refs.videoPlayer.style.left  = this.videoLeft + 'px';
+    },
+    stopDragging(){
+      document.onmousemove = null;
+      document.onmouseup = null;
+    }
+
   },
 };
 </script>
