@@ -7,10 +7,12 @@
       class="video-wrapper"
       @mouseenter="showControls()"
       @mouseleave="hideControls()"
+      @drag="moveVideo($event)"
     >
       <video
         ref="videoPlayer"
         @click="togglePlay()"
+        @mousedown="moveVideo($event)"
         @loadedmetadata="onLoadedMetadata()"
         @timeupdate="onTimeUpdate()"
       ></video>
@@ -174,6 +176,11 @@ export default {
       controlsShown: true,
       volume: 1,
       fullscreen: false,
+      videoY: undefined,
+      videoX: undefined,
+      videoLeft: 50,
+      videoTop: 50,
+      nowDragging: false,
     };
   },
 
@@ -238,7 +245,10 @@ export default {
       setPlaybackRate: "setPlaybackRate",
     }),
     togglePlay() {
-      this.togglePlayVideo();
+      if(this.nowDragging == false){
+        this.togglePlayVideo();
+      }
+      
       // if (this.video.paused || this.video.ended) {
       //   this.video.play();
       //   this.setVideoPaused(false);
@@ -289,6 +299,61 @@ export default {
         this.fullscreen = true;
       }
     },
+
+    moveVideo(event){
+      event.preventDefault();
+      this.videoY = event.clientY;
+      this.videoX = event.clientX;
+
+      this.$refs.videoPlayer.onmousemove = this.startDragging;
+      this.$refs.videoPlayer.onmouseup = this.stopDragging;
+    },
+    startDragging(event){ 
+      this.nowDragging = true;  
+      if(this.boundariesExceeded() === true) {
+        return;
+      }
+      let movementX = this.videoX - event.clientX;
+      let movementY = this.videoY - event.clientY;
+
+      this.videoTop += movementY * 0.1;
+      this.videoLeft += movementX * 0.1;
+
+      this.videoY = event.clientY;
+      this.videoX = event.clientX;
+      
+      this.$refs.videoPlayer.style.transformOrigin  = `${this.videoLeft}% ${this.videoTop}%`;
+    },
+    stopDragging(){
+      this.$refs.videoPlayer.onmousemove = null;
+      this.$refs.videoPlayer.onmouseup = null;
+      // onmouseup togglePlay() function will be triggered too
+      // with timeout, I'm preventing togglePlay() if user was draggin the video
+      setTimeout(() => {
+        this.nowDragging = false;
+      }, 10);
+    },
+
+    boundariesExceeded(){
+      if(this.videoLeft > 100 ){
+        this.videoLeft = 100;
+        return true;
+      }
+      else if(this.videoLeft < 0){
+        this.videoLeft = 0;
+        return true;
+      }
+      else if(this.videoTop > 100) {
+        this.videoTop = 100;
+        return true;
+      }
+      else if(this.videoTop < 0) {
+        this.videoTop = 0;
+        return true;
+      }
+
+    }
+
   },
 };
 </script>

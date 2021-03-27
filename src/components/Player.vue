@@ -17,6 +17,7 @@ export default {
   data() {
     return {
       videoPath: "asdf",
+      videoZoom: 1,
     };
   },
   created() {
@@ -51,6 +52,9 @@ export default {
         if (event.defaultPrevented) {
           return; // Do nothing if the event was already processed
         }
+
+        this.addZoomListeners(event);
+
         switch (event.key) {
           case " ":
             this.togglePlayVideo();
@@ -68,94 +72,35 @@ export default {
       });
     },
 
-    // playOrPause() {
-    //   let paused = this.player.paused();
-    //   if (paused) {
-    //     this.player.play();
-    //   } else {
-    //     this.player.pause();
-    //   }
-    // },
+    addZoomListeners(event){
+      let isWindowsZoomIn = event.ctrlKey && event.key === "=";
+      if(isWindowsZoomIn) {
+        this.zoomIn();
+      }
 
-    // forward() {
-    //   // seek forward 5 * playbackRate seconds
-    //   let time = this.player.currentTime() + 5 * this.player.playbackRate();
-    //   this.player.currentTime(time);
-    // },
-    // backward() {
-    //   // seek backward 5 * playbackRate seconds
-    //   let time = this.player.currentTime() - 5 * this.player.playbackRate();
-    //   this.player.currentTime(time);
-    // },
-    // zoomIn() {
-    //   let videoElem = document.getElementsByTagName("video")[0];
-    //   videoElem.className = "videoZoomIn";
-    //   videoElem.style.animation = "zoomIn 0.2s linear";
-    // },
-    // zoomOut() {
-    //   let videoElem = document.getElementsByTagName("video")[0];
-    //   videoElem.className = "videoZoomOut";
-    //   videoElem.style.animation = "zoomOut 0.2s linear";
-    // },
+      let isWindowsZoomOut = event.ctrlKey && event.key === "-";
+      if (isWindowsZoomOut) {
+        this.zoomOut();
+      }
+    },
 
-    // onCanplay() {
-    //   console.log("can play");
-    //   this.canPlayVideo = true;
-    // },
-    // onError() {
-    //   console.log("cant play");
-    //   this.canPlayVideo = false;
-    // },
+    zoomIn(){
+      if (this.videoZoom === 2.4) return;
+      this.videoZoom += 0.2;
+      let videoElem = document.getElementsByTagName("video")[0];
+
+      videoElem.style.position = "absolute";
+      videoElem.style.transform = `scale(${this.videoZoom})`;
+    },
+    zoomOut(){
+      if (this.videoZoom === 1) return;
+      this.videoZoom -= 0.2;
+      let videoElem = document.getElementsByTagName("video")[0];
+
+      videoElem.style.position = "absolute";
+      videoElem.style.transform = `scale(${this.videoZoom})`;
+    }
+
   },
 };
 </script>
-
-<style>
-/* zoom In and zoom Out classes and animations */
-.videoZoomIn {
-  width: 200%;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-.videoZoomOut {
-  width: 100%;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-@keyframes zoomOut {
-  from {
-    width: 200%;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-  to {
-    width: 100%;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-}
-@keyframes zoomIn {
-  from {
-    width: 100%;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-  to {
-    width: 200%;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-}
-</style>
