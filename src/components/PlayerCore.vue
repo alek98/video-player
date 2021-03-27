@@ -60,15 +60,15 @@
                     </v-btn>
                   </v-col>
 
-                  <v-col cols="1" class="pl-0 pr-0" align="left">
+                  <v-col cols="1" class="pl-0 mr-1" align="left">
                     <!-- time -->
-                    <div class="lightText">
+                    <div class="lightText" style="">
                       {{ getVideoCurrentTimeFormated }} /
                       {{ getVideoDurationFormated }}
                     </div>
                   </v-col>
 
-                  <v-col class="pl-4 pr-0">
+                  <v-col class="ml-4 pr-0">
                     <!-- volume -->
                     <div id="volumeSlider" class="sliderWidth">
                       <v-slider
@@ -105,7 +105,7 @@
 
                   <v-col align="right">
                     <v-row align="center">
-                      <v-col align="right" class="pr-0">
+                      <v-col align="right" class="pr-0 pl-0">
                         <!-- playback rate -->
                         <div id="playbackRateSlider" class="sliderWidth">
                           <v-slider
@@ -376,7 +376,7 @@ export default {
 }
 .lightText {
   color: #0e153a;
-  font-size: 13px;
+  font-size: 12px;
   white-space: nowrap;
 }
 .sliderWidth {

@@ -89,7 +89,7 @@ export default {
       this.videoZoom += 0.2;
       let videoElem = document.getElementsByTagName("video")[0];
 
-      videoElem.style.position = "absolute";
+      // videoElem.style.position = "absolute";
       videoElem.style.transform = `scale(${this.videoZoom})`;
     },
     zoomOut(){
@@ -97,7 +97,7 @@ export default {
       this.videoZoom -= 0.2;
       let videoElem = document.getElementsByTagName("video")[0];
 
-      videoElem.style.position = "absolute";
+      // videoElem.style.position = "absolute";
       videoElem.style.transform = `scale(${this.videoZoom})`;
     }
 
