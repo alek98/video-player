@@ -15,7 +15,6 @@
         @mousedown="moveVideo($event)"
         @loadedmetadata="onLoadedMetadata()"
         @timeupdate="onTimeUpdate()"
-        src="file:///Users/alek/Downloads/BigBuckBunny%205.mp4"
       ></video>
 
       <!-- video controls -->
