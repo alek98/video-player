@@ -1,7 +1,10 @@
 module.exports = {
   pluginOptions: {
-      electronBuilder: {
-          nodeIntegration: true
-      }
-  }
+    electronBuilder: {
+      nodeIntegration: true
+    }
+  },
+  transpileDependencies: [
+    'vuetify'
+  ],
 }

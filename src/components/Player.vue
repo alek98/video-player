@@ -1,72 +1,63 @@
 <template>
-<div>
-  <div class="my-wrapper" v-show="canPlayVideo==true">
-    <videoPlayer 
-    class="video-js vjs-default-skin vjs-big-play-centered"
-    :options="playerOptions"
-    ref="videoPlayer" 
-    @canplay="onCanplay()"
-    @error="onError()"
-    />
+  <div>
+    <PlayerCore :videoPath="videoPath" />
   </div>
-
-  <div id="problem" v-show="canPlayVideo==false">
-    We can't play this video. Please try again.
-  </div>
-</div>
 </template>
 
 <script>
-import {videoPlayer}  from 'vue-video-player'
-import 'video.js/dist/video-js.css'
-import { ipcRenderer } from 'electron'
+import { mapActions } from "vuex";
+import PlayerCore from "./PlayerCore";
+import { ipcRenderer } from "electron";
 
 export default {
   components: {
-    videoPlayer,
+    PlayerCore,
   },
 
-  data(){
-    return{
-      playerOptions: {
-        muted: false,
-        language: 'en',
-        playbackRates: [0.75, 1.0, 1.25, 1.5, 1.75, 1.9, 2.0],
-      },
-      /*TODO:   fix video.js changing source error code 4.
-      */
-      canPlayVideo: null, //by default there is no video path 
-    }
+  data() {
+    return {
+      videoPath: "asdf",
+      videoZoom: 1,
+    };
   },
   created() {
     this.addRenderer();
     this.addKeyListeners();
   },
-  computed:{
-    player(){
+  computed: {
+    player() {
       return this.$refs.videoPlayer.player;
     },
   },
 
   methods: {
-    addRenderer(){
-      ipcRenderer.on("video-path-channel", (event,videoPath) =>{
-        console.log(" %c video path: ", "color:darkblue; background-color:yellow", videoPath);
-        this.player.src({
-          src: videoPath,
-          type:"video/mp4",
-        });
-      })
+    ...mapActions({
+      togglePlayVideo: "togglePlayVideo",
+      forward: "forward",
+      backward: "backward",
+    }),
+    addRenderer() {
+      ipcRenderer.on("video-path-channel", (event, videoPath) => {
+        console.log(
+          " %c video path: ",
+          "color:darkblue; background-color:yellow",
+          videoPath
+        );
+        this.videoPath = videoPath;
+      });
     },
 
-    addKeyListeners(){
-      window.addEventListener('keydown', (event) => {
+    addKeyListeners() {
+      window.addEventListener("keydown", (event) => {
         if (event.defaultPrevented) {
           return; // Do nothing if the event was already processed
         }
+
+        this.addZoomListeners(event);
+
         switch (event.key) {
           case " ":
-            this.playOrPause();
+            this.togglePlayVideo();
             break;
           case "ArrowLeft":
             this.backward();
@@ -77,90 +68,39 @@ export default {
           default:
             return;
         }
-        event.preventDefault(); 
+        event.preventDefault();
       });
     },
-    
-    playOrPause(){
-      let paused = this.player.paused();
-      if(paused){
-        this.player.play();
+
+    addZoomListeners(event){
+      let isWindowsZoomIn = event.ctrlKey && event.key === "=";
+      if(isWindowsZoomIn) {
+        this.zoomIn();
       }
-      else{
-        this.player.pause();
+
+      let isWindowsZoomOut = event.ctrlKey && event.key === "-";
+      if (isWindowsZoomOut) {
+        this.zoomOut();
       }
     },
 
-    forward(){
-      // seek forward 5 * playbackRate seconds
-      let time = this.player.currentTime() + 5 * this.player.playbackRate();
-      this.player.currentTime(time);
-    },
-    backward(){
-      // seek backward 5 * playbackRate seconds
-      let time = this.player.currentTime() -  5 * this.player.playbackRate();
-      this.player.currentTime(time);
-    },
+    zoomIn(){
+      if (this.videoZoom === 2.4) return;
+      this.videoZoom += 0.2;
+      let videoElem = document.getElementsByTagName("video")[0];
 
-    onCanplay(){
-      console.log('can play');
-      this.canPlayVideo = true;
+      // videoElem.style.position = "absolute";
+      videoElem.style.transform = `scale(${this.videoZoom})`;
     },
-    onError(){
-      console.log('cant play')
-      this.canPlayVideo = false;
+    zoomOut(){
+      if (this.videoZoom === 1) return;
+      this.videoZoom -= 0.2;
+      let videoElem = document.getElementsByTagName("video")[0];
+
+      // videoElem.style.position = "absolute";
+      videoElem.style.transform = `scale(${this.videoZoom})`;
     }
-  }
-}
+
+  },
+};
 </script>
-
-<style>
-.my-wrapper{
-  width:100%; 
-  height: 100vh; 
-  min-height:290px;
-  
-}
-.video-js {
-    position: relative !important;
-    width: 100% !important;
-    height: 100% !important;
-    color: #e2f3f5;
-}
- .video-js .vjs-control-bar{
-  background: #0e153a85;
-}
-.video-js .vjs-slider-bar, 
-.video-js .vjs-volume-level{
-  background:#22d1ee;
-}
-.video-js .vjs-playback-rate{
-  color: #e2f3f5;
-}
-.video-js .vjs-big-play-button{ 
-  color: #e2f3f5;
-  background: #3d5bf18f;
-  border-radius: 25px;
-  border-color: #e2f3f5;
-  border-width: 0px;
-  font-size: 35px;
-}
-.vjs-default-skin:hover .vjs-big-play-button{ 
-  color: #e2f3f5;
-  background: #3d5bf1;
-  border-radius: 25px;
-  border-color: #e2f3f5;
-  border-width: 0px;
-  font-size: 35px;
-}
-
-#problem{
-  font-size: 20px;
-  color:#e2f3f5;
-  background-color: #0e153a;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-</style>
