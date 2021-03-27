@@ -306,8 +306,8 @@ export default {
       this.videoY = event.clientY;
       this.videoX = event.clientX;
 
-      document.onmousemove = this.startDragging;
-      document.onmouseup = this.stopDragging;
+      this.$refs.videoPlayer.onmousemove = this.startDragging;
+      this.$refs.videoPlayer.onmouseup = this.stopDragging;
     },
     startDragging(event){ 
       this.nowDragging = true;  
@@ -326,8 +326,8 @@ export default {
       this.$refs.videoPlayer.style.transformOrigin  = `${this.videoLeft}% ${this.videoTop}%`;
     },
     stopDragging(){
-      document.onmousemove = null;
-      document.onmouseup = null;
+      this.$refs.videoPlayer.onmousemove = null;
+      this.$refs.videoPlayer.onmouseup = null;
       // onmouseup togglePlay() function will be triggered too
       // with timeout, I'm preventing togglePlay() if user was draggin the video
       setTimeout(() => {
