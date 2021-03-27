@@ -307,6 +307,7 @@ export default {
 
       this.$refs.videoPlayer.onmousemove = this.startDragging;
       this.$refs.videoPlayer.onmouseup = this.stopDragging;
+      this.$refs.videoPlayer.onmouseleave = this.stopDragging;
     },
     startDragging(event){ 
       this.nowDragging = true;  
