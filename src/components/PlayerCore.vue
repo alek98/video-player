@@ -310,7 +310,10 @@ export default {
       document.onmouseup = this.stopDragging;
     },
     startDragging(event){ 
-      this.nowDragging = true;   
+      this.nowDragging = true;  
+      if(this.boundariesExceeded() === true) {
+        return;
+      }
       let movementX = this.videoX - event.clientX;
       let movementY = this.videoY - event.clientY;
 
@@ -330,6 +333,26 @@ export default {
       setTimeout(() => {
         this.nowDragging = false;
       }, 10);
+    },
+
+    boundariesExceeded(){
+      if(this.videoLeft > 100 ){
+        this.videoLeft = 100;
+        return true;
+      }
+      else if(this.videoLeft < 0){
+        this.videoLeft = 0;
+        return true;
+      }
+      else if(this.videoTop > 100) {
+        this.videoTop = 100;
+        return true;
+      }
+      else if(this.videoTop < 0) {
+        this.videoTop = 0;
+        return true;
+      }
+
     }
 
   },
