@@ -58,6 +58,9 @@ export default {
 </script>
 
 <style>
+body::-webkit-scrollbar{
+  display: none;
+}
 #app {
   margin: 0px !important;
   padding: 0px !important;
