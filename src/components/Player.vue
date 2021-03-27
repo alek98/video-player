@@ -17,9 +17,7 @@ export default {
   data() {
     return {
       videoPath: "asdf",
-      videoZoom: 100,
-      videoZoomLeft: 50,
-      videoZoomTop: 50,
+      videoZoom: 1,
     };
   },
   created() {
@@ -87,30 +85,20 @@ export default {
     },
 
     zoomIn(){
-      if (this.videoZoom === 200) return;
-      this.videoZoom += 25;
-      this.videoZoomLeft = 50;
-      this.videoZoomTop = 50;
+      if (this.videoZoom === 2.4) return;
+      this.videoZoom += 0.2;
       let videoElem = document.getElementsByTagName("video")[0];
-      videoElem.style.width = `${this.videoZoom}%`;
-      videoElem.style.height = `${this.videoZoom}%`;
+
       videoElem.style.position = "absolute";
-      videoElem.style.transform = "translate(-50%, -50%)";
-      videoElem.style.left = `${this.videoZoomLeft}%`;
-      videoElem.style.top = `${this.videoZoomTop}%`;
+      videoElem.style.transform = `scale(${this.videoZoom})`;
     },
     zoomOut(){
-      if (this.videoZoom === 100) return;
-      this.videoZoom -= 25;
-      this.videoZoomLeft = 50;
-      this.videoZoomTop = 50;
+      if (this.videoZoom === 1) return;
+      this.videoZoom -= 0.2;
       let videoElem = document.getElementsByTagName("video")[0];
-      videoElem.style.width = `${this.videoZoom}%`;
-      videoElem.style.height = `${this.videoZoom}%`;
+
       videoElem.style.position = "absolute";
-      videoElem.style.transform = "translate(-50%, -50%)";
-      videoElem.style.left = `${this.videoZoomLeft}%`;
-      videoElem.style.top = `${this.videoZoomTop}%`;
+      videoElem.style.transform = `scale(${this.videoZoom})`;
     }
 
     // playOrPause() {

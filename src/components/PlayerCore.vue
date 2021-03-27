@@ -179,8 +179,8 @@ export default {
       fullscreen: false,
       videoY: undefined,
       videoX: undefined,
-      videoLeft: 0,
-      videoTop: 0,
+      videoLeft: 50,
+      videoTop: 50,
       nowDragging: false,
     };
   },
@@ -305,8 +305,6 @@ export default {
       event.preventDefault();
       this.videoY = event.clientY;
       this.videoX = event.clientX;
-      this.videoTop = this.$refs.videoPlayer.offsetTop;
-      this.videoLeft = this.$refs.videoPlayer.offsetLeft;
 
       document.onmousemove = this.startDragging;
       document.onmouseup = this.stopDragging;
@@ -314,16 +312,15 @@ export default {
     startDragging(event){ 
       this.nowDragging = true;   
       let movementX = this.videoX - event.clientX;
-      let movementY = this.videoY - event.clientY
+      let movementY = this.videoY - event.clientY;
 
-      this.videoTop -= movementY;
-      this.videoLeft -= movementX;
+      this.videoTop += movementY * 0.1;
+      this.videoLeft += movementX * 0.1;
 
       this.videoY = event.clientY;
       this.videoX = event.clientX;
       
-      this.$refs.videoPlayer.style.top  = this.videoTop + 'px';
-      this.$refs.videoPlayer.style.left  = this.videoLeft + 'px';
+      this.$refs.videoPlayer.style.transformOrigin  = `${this.videoLeft}% ${this.videoTop}%`;
     },
     stopDragging(){
       document.onmousemove = null;
