@@ -17,6 +17,9 @@ export default {
   data() {
     return {
       videoPath: "asdf",
+      videoZoom: 100,
+      videoZoomLeft: 50,
+      videoZoomTop: 50,
     };
   },
   created() {
@@ -51,6 +54,9 @@ export default {
         if (event.defaultPrevented) {
           return; // Do nothing if the event was already processed
         }
+
+        this.addZoomListeners(event);
+
         switch (event.key) {
           case " ":
             this.togglePlayVideo();
@@ -67,6 +73,45 @@ export default {
         event.preventDefault();
       });
     },
+
+    addZoomListeners(event){
+      let isWindowsZoomIn = event.ctrlKey && event.key === "=";
+      if(isWindowsZoomIn) {
+        this.zoomIn();
+      }
+
+      let isWindowsZoomOut = event.ctrlKey && event.key === "-";
+      if (isWindowsZoomOut) {
+        this.zoomOut();
+      }
+    },
+
+    zoomIn(){
+      if (this.videoZoom === 200) return;
+      this.videoZoom += 25;
+      this.videoZoomLeft = 50;
+      this.videoZoomTop = 50;
+      let videoElem = document.getElementsByTagName("video")[0];
+      videoElem.style.width = `${this.videoZoom}%`;
+      videoElem.style.height = `${this.videoZoom}%`;
+      videoElem.style.position = "absolute";
+      videoElem.style.transform = "translate(-50%, -50%)";
+      videoElem.style.left = `${this.videoZoomLeft}%`;
+      videoElem.style.top = `${this.videoZoomTop}%`;
+    },
+    zoomOut(){
+      if (this.videoZoom === 100) return;
+      this.videoZoom -= 25;
+      this.videoZoomLeft = 50;
+      this.videoZoomTop = 50;
+      let videoElem = document.getElementsByTagName("video")[0];
+      videoElem.style.width = `${this.videoZoom}%`;
+      videoElem.style.height = `${this.videoZoom}%`;
+      videoElem.style.position = "absolute";
+      videoElem.style.transform = "translate(-50%, -50%)";
+      videoElem.style.left = `${this.videoZoomLeft}%`;
+      videoElem.style.top = `${this.videoZoomTop}%`;
+    }
 
     // playOrPause() {
     //   let paused = this.player.paused();
