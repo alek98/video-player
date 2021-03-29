@@ -5,7 +5,7 @@
       pa-0
       ma-0
       class="video-wrapper"
-      @mouseenter="showControls()"
+      @mousemove="showControls()"
       @mouseleave="hideControls()"
       @drag="moveVideo($event)"
     >
@@ -27,7 +27,11 @@
           width="80%"
           :no-click-animation="true"
         >
-          <div class="controls">
+          <div 
+          class="controls"
+          @mouseenter="mouseOverControls = true"
+          @mouseleave="mouseOverControls = false"
+          >
             <!-- slider -->
             <div id="timeSlider">
               <v-slider
@@ -181,6 +185,8 @@ export default {
       videoLeft: 50,
       videoTop: 50,
       nowDragging: false,
+      mouseOverControls: false,
+      hideControlsTimeout: undefined,
     };
   },
 
@@ -259,9 +265,21 @@ export default {
     },
     showControls() {
       this.controlsShown = true;
+      this.$refs.videoPlayer.style.cursor = 'auto'
+
+      // if the mouse is moving clear timeout, prevent hiding controls
+      clearTimeout(this.hideControlsTimeout);
+      this.hideControlsTimeout = setTimeout( () => { 
+        this.hideControls();
+        this.$refs.videoPlayer.style.cursor = 'none'
+      } , 3000);
+      
+      // if the mouse is over controls clear timeout, prevent hiding controls
+      if(this.mouseOverControls == true) clearTimeout(this.hideControlsTimeout)
     },
     hideControls() {
-      setTimeout(() => (this.controlsShown = false), 0);
+      // setTimeout(() => (this.controlsShown = false), 0);
+      this.controlsShown = false;
     },
     onLoadedMetadata() {
       this.setVideo(this.$refs.videoPlayer);
@@ -372,7 +390,7 @@ export default {
   padding-top: 5px;
   margin-bottom: 5px;
   width: 100%;
-  background-color: rgba(236, 245, 247, 0.74);
+  background-color: rgba(236, 245, 247, 0.85);
 }
 .lightText {
   color: #0e153a;
