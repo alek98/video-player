@@ -265,10 +265,14 @@ export default {
     },
     showControls() {
       this.controlsShown = true;
+      this.$refs.videoPlayer.style.cursor = 'auto'
 
       // if the mouse is moving clear timeout, prevent hiding controls
       clearTimeout(this.hideControlsTimeout);
-      this.hideControlsTimeout = setTimeout( () => this.hideControls() , 3000);
+      this.hideControlsTimeout = setTimeout( () => { 
+        this.hideControls();
+        this.$refs.videoPlayer.style.cursor = 'none'
+      } , 3000);
       
       // if the mouse is over controls clear timeout, prevent hiding controls
       if(this.mouseOverControls == true) clearTimeout(this.hideControlsTimeout)
@@ -386,7 +390,7 @@ export default {
   padding-top: 5px;
   margin-bottom: 5px;
   width: 100%;
-  background-color: rgba(236, 245, 247, 0.74);
+  background-color: rgba(236, 245, 247, 0.85);
 }
 .lightText {
   color: #0e153a;
