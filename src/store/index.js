@@ -10,6 +10,7 @@ export default new Vuex.Store({
     videoDuration: 0,
     videoCurrentTime: 0,
     playbackRate: 1,
+    videoZoom: 1,
   },
   getters: {
     getVideo: (state) => state.video,
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     getVideoDuration: (state) => state.videoDuration,
     getVideoCurrentTime: (state) => state.videoCurrentTime,
     getPlaybackRate: (state) => state.playbackRate,
+    getGlobalVideoZoom: (state) => state.videoZoom,
 
   },
 
@@ -51,6 +53,9 @@ export default new Vuex.Store({
     backward({ state }) {
       state.video.currentTime -= 5 * state.playbackRate;
     },
+    setGlobalVideoZoom({commit}, videoZoom) {
+      commit('setGlobalVideoZoom', videoZoom)
+    }
   },
   mutations: {
     setVideo: (state, videoHtmlElement) => state.video = videoHtmlElement,
@@ -58,6 +63,7 @@ export default new Vuex.Store({
     setVideoDuration: (state, videoDuration) => state.videoDuration = videoDuration,
     setVideoCurrentTime: (state, videoCurrentTime) => state.videoCurrentTime = videoCurrentTime,
     setPlaybackRate: (state, playbackRate) => state.playbackRate = playbackRate,
+    setGlobalVideoZoom: (state, videoZoom) => state.videoZoom = videoZoom,
   },
 
   modules: {

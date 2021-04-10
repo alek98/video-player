@@ -35,6 +35,7 @@ export default {
       togglePlayVideo: "togglePlayVideo",
       forward: "forward",
       backward: "backward",
+      setGlobalVideoZoom: 'setGlobalVideoZoom'
     }),
     addRenderer() {
       ipcRenderer.on("video-path-channel", (event, videoPath) => {
@@ -108,6 +109,9 @@ export default {
       // video element shoud stay where the animation has been finished
       // videoElem.style.position = "absolute";
       videoElem.style.transform = `scale(${this.videoZoom})`;
+
+      // set global video zoom, so it can be referenced from playerCore.vue
+      this.setGlobalVideoZoom(this.videoZoom);
     
     },
     zoomOut(){
@@ -134,6 +138,9 @@ export default {
       // video element shoud stay where the animation has been finished
       // videoElem.style.position = "absolute";
       videoElem.style.transform = `scale(${this.videoZoom})`;
+
+      // set global video zoom, so it can be referenced from playerCore.vue
+      this.setGlobalVideoZoom(this.videoZoom);
     }
 
   },
