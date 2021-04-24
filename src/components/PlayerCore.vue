@@ -229,6 +229,7 @@ export default {
       videoCurrentTime: "getVideoCurrentTime",
       videoPaused: "getVideoPaused",
       playbackRate: "getPlaybackRate",
+      getGlobalVideoZoom: "getGlobalVideoZoom"
     }),
   },
 
@@ -318,6 +319,7 @@ export default {
       }
     },
 
+    // move video and Draggin functions
     moveVideo(event){
       event.preventDefault();
       this.videoY = event.clientY;
@@ -335,8 +337,15 @@ export default {
       let movementX = this.videoX - event.clientX;
       let movementY = this.videoY - event.clientY;
 
-      this.videoTop += movementY * 0.1;
-      this.videoLeft += movementX * 0.1;
+      //the old simpler way of zooming in
+      // when zoom in small mouse has to move a lot because of this 0.1
+      // this.videoTop += movementY * 0.1;
+      // this.videoLeft += movementX * 0.1;
+
+      // the new way of zooming in
+      // much more responsive
+      this.videoTop += movementY * 0.45 / this.getGlobalVideoZoom ** 2;
+      this.videoLeft += movementX * 0.45 / this.getGlobalVideoZoom ** 2;
 
       this.videoY = event.clientY;
       this.videoX = event.clientX;
