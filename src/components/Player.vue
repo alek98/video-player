@@ -1,6 +1,16 @@
 <template>
   <div>
-    <PlayerCore :videoPath="videoPath" />
+    <div style="position: relative">
+      <div style="position: absolute; z-index: 3;">
+        <PlayerHeader :videoPath="videoPath" />
+      </div>
+      <div style="position: absolute">
+        <PlayerCore :videoPath="videoPath" />
+      </div>
+    </div>
+    
+    
+    
   </div>
 </template>
 
@@ -8,15 +18,17 @@
 import { mapActions } from "vuex";
 import PlayerCore from "./PlayerCore";
 import { ipcRenderer } from "electron";
+import PlayerHeader from './PlayerHeader.vue';
 
 export default {
   components: {
     PlayerCore,
+    PlayerHeader,
   },
 
   data() {
     return {
-      videoPath: "asdf",
+      videoPath: "file:///Users/alek/Downloads/BigBuckBunny%205.mp4",
       videoZoom: 1,
     };
   },
