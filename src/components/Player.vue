@@ -1,16 +1,17 @@
 <template>
   <div>
-    <div style="position: relative">
-      <div style="position: absolute; z-index: 3;">
+    <div 
+      @mousemove="showPlayerHeaderAndControls();"
+      @mouseleave="hidePlayerHeaderAndControls()"
+      style="position: relative"
+    >
+      <div class="player-header">
         <PlayerHeader :videoPath="videoPath" />
       </div>
       <div style="position: absolute">
         <PlayerCore :videoPath="videoPath" />
       </div>
     </div>
-    
-    
-    
   </div>
 </template>
 
@@ -36,6 +37,9 @@ export default {
     this.addRenderer();
     this.addKeyListeners();
   },
+  mounted() {
+    this.setPlayerHeader()
+  },
   computed: {
     player() {
       return this.$refs.videoPlayer.player;
@@ -47,7 +51,10 @@ export default {
       togglePlayVideo: "togglePlayVideo",
       forward: "forward",
       backward: "backward",
-      setGlobalVideoZoom: 'setGlobalVideoZoom'
+      setGlobalVideoZoom: 'setGlobalVideoZoom',
+      toggleControls: "toggleControls",
+      toggleHeader: "playerHeader/toggleHeader",
+      setPlayerHeaderHtmlElem: "playerHeader/setPlayerHeaderHtmlElem",
     }),
     addRenderer() {
       ipcRenderer.on("video-path-channel", (event, videoPath) => {
@@ -153,6 +160,19 @@ export default {
 
       // set global video zoom, so it can be referenced from playerCore.vue
       this.setGlobalVideoZoom(this.videoZoom);
+    },
+
+    showPlayerHeaderAndControls() {
+      this.toggleControls(true);
+      this.toggleHeader(true);
+    },
+    hidePlayerHeaderAndControls() {
+      this.toggleControls(false);
+      this.toggleHeader(false);
+    },
+    setPlayerHeader() {
+      let header = document.getElementsByClassName("player-header")[0];
+      this.setPlayerHeaderHtmlElem(header);
     }
 
   },
@@ -168,5 +188,10 @@ export default {
 @keyframes zoomOut {
   from { transform: scale(calc(var(--zoomVideoFrom)));}
   to  {  transform: scale(calc(var(--zoomVideoTo)));}
+}
+
+.player-header {
+  position: absolute;
+  z-index: 3;
 }
 </style>

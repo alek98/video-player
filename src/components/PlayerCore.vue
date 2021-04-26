@@ -5,8 +5,6 @@
       pa-0
       ma-0
       class="video-wrapper"
-      @mousemove="showControls()"
-      @mouseleave="hideControls()"
       @drag="moveVideo($event)"
     >
       <video
@@ -177,7 +175,6 @@ export default {
 
   data() {
     return {
-      controlsShown: true,
       volume: 1,
       fullscreen: false,
       videoY: undefined,
@@ -185,7 +182,6 @@ export default {
       videoLeft: 50,
       videoTop: 50,
       nowDragging: false,
-      mouseOverControls: false,
       hideControlsTimeout: undefined,
     };
   },
@@ -223,13 +219,32 @@ export default {
         return 28;
       }
     },
+
+    controlsShown: {
+      get() {
+        return this.getControlsShown;
+      },
+      set(bool) {
+        return this.setControlsShown(bool);
+      }
+    },
+    mouseOverControls: {
+      get() {
+        return this.getMouseOverControls;
+      },
+      set(bool) {
+        return this.setMouseOverControls(bool);
+      }
+    },
     ...mapGetters({
       video: "getVideo",
       videoDuration: "getVideoDuration",
       videoCurrentTime: "getVideoCurrentTime",
       videoPaused: "getVideoPaused",
       playbackRate: "getPlaybackRate",
-      getGlobalVideoZoom: "getGlobalVideoZoom"
+      getGlobalVideoZoom: "getGlobalVideoZoom",
+      getControlsShown: "getControlsShown",
+      getMouseOverControls: "getMouseOverControls"
     }),
   },
 
@@ -250,37 +265,20 @@ export default {
       setVideoCurrentTime: "setVideoCurrentTime",
       setVideoPaused: "setVideoPaused",
       setPlaybackRate: "setPlaybackRate",
+      toggleControls: "toggleControls",
+      setControlsShown: "setControlsShown",
+      setMouseOverControls: "setMouseOverControls",
     }),
     togglePlay() {
       if(this.nowDragging == false){
         this.togglePlayVideo();
       }
-      
-      // if (this.video.paused || this.video.ended) {
-      //   this.video.play();
-      //   this.setVideoPaused(false);
-      // } else {
-      //   this.video.pause();
-      //   this.setVideoPaused(true);
-      // }
     },
     showControls() {
-      this.controlsShown = true;
-      this.$refs.videoPlayer.style.cursor = 'auto'
-
-      // if the mouse is moving clear timeout, prevent hiding controls
-      clearTimeout(this.hideControlsTimeout);
-      this.hideControlsTimeout = setTimeout( () => { 
-        this.hideControls();
-        this.$refs.videoPlayer.style.cursor = 'none'
-      } , 3000);
-      
-      // if the mouse is over controls clear timeout, prevent hiding controls
-      if(this.mouseOverControls == true) clearTimeout(this.hideControlsTimeout)
+      this.toggleControls(true);
     },
     hideControls() {
-      // setTimeout(() => (this.controlsShown = false), 0);
-      this.controlsShown = false;
+      this.toggleControls(false);
     },
     onLoadedMetadata() {
       this.setVideo(this.$refs.videoPlayer);
