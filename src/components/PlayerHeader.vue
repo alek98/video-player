@@ -52,6 +52,8 @@ export default {
 .overlay {
   background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(0,0,0,.3) 50%, rgba(0,0,0,.8));
   width: 100vw;
+  /* force overlapping layers to pass through (ignore) click events */
+  pointer-events: none;
 }
 .heading {
   color: white;
@@ -76,6 +78,8 @@ export default {
 .btn {
   cursor: pointer;
   border-radius: 50%;
+  /* do Not ignore click event on the back button */
+  pointer-events: auto;
 }
 .btn:hover {
   background-color: rgba(245, 245, 245, 0.195);

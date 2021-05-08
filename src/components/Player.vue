@@ -191,6 +191,8 @@ export default {
 }
 
 .player-header {
+  /* force overlapping layers to pass through (ignore) click events */
+  pointer-events: none;
   position: absolute;
   z-index: 3;
 }
