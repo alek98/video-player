@@ -1,28 +1,42 @@
 <template>
   <div>
-    <PlayerCore :videoPath="videoPath" />
+    <div 
+      @mousemove="showPlayerHeaderAndControls();"
+      @mouseleave="hidePlayerHeaderAndControls()"
+      style="position: relative"
+    >
+      <div class="player-header">
+        <PlayerHeader />
+      </div>
+      <div class="player-core">
+        <PlayerCore />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
 import PlayerCore from "./PlayerCore";
-import { ipcRenderer } from "electron";
+import PlayerHeader from './PlayerHeader.vue';
 
 export default {
   components: {
     PlayerCore,
+    PlayerHeader,
   },
 
   data() {
     return {
-      videoPath: "asdf",
+      // videoPath: "file:///Users/alek/Downloads/BigBuckBunny%205.mp4",
       videoZoom: 1,
     };
   },
   created() {
-    this.addRenderer();
     this.addKeyListeners();
+  },
+  mounted() {
+    this.setPlayerHeader()
   },
   computed: {
     player() {
@@ -32,20 +46,15 @@ export default {
 
   methods: {
     ...mapActions({
+      setVideoPath: "setVideoPath",
       togglePlayVideo: "togglePlayVideo",
       forward: "forward",
       backward: "backward",
+      setGlobalVideoZoom: 'setGlobalVideoZoom',
+      toggleControls: "toggleControls",
+      toggleHeader: "playerHeader/toggleHeader",
+      setPlayerHeaderHtmlElem: "playerHeader/setPlayerHeaderHtmlElem",
     }),
-    addRenderer() {
-      ipcRenderer.on("video-path-channel", (event, videoPath) => {
-        console.log(
-          " %c video path: ",
-          "color:darkblue; background-color:yellow",
-          videoPath
-        );
-        this.videoPath = videoPath;
-      });
-    },
 
     addKeyListeners() {
       window.addEventListener("keydown", (event) => {
@@ -86,21 +95,97 @@ export default {
 
     zoomIn(){
       if (this.videoZoom === 2.4) return;
+
+      // zoomVideoFrom & zoomVideoTo will be css variables 
+      // this is for css animation
+      let zoomVideoFrom = this.videoZoom;
       this.videoZoom += 0.2;
+      let zoomVideoTo = this.videoZoom;
+
+      // reference the <video> element
       let videoElem = document.getElementsByTagName("video")[0];
 
+      //reset animation 
+      videoElem.style.animation = null;
+      videoElem.offsetHeight;
+      
+      // set css variables and start animation
+      videoElem.style.setProperty('--zoomVideoFrom', zoomVideoFrom);
+      videoElem.style.setProperty('--zoomVideoTo'  , zoomVideoTo);
+      videoElem.style.animation = "zoomIn 0.2s ease-in-out";
+
+      // video element shoud stay where the animation has been finished
       // videoElem.style.position = "absolute";
       videoElem.style.transform = `scale(${this.videoZoom})`;
+
+      // set global video zoom, so it can be referenced from playerCore.vue
+      this.setGlobalVideoZoom(this.videoZoom);
+    
     },
     zoomOut(){
       if (this.videoZoom === 1) return;
+
+      // zoomVideoFrom & zoomVideoTo will be css variables 
+      // this is for css animation
+      let zoomVideoFrom = this.videoZoom;
       this.videoZoom -= 0.2;
+      let zoomVideoTo = this.videoZoom;
+
+      // reference the <video> element
       let videoElem = document.getElementsByTagName("video")[0];
 
+      //reset animation
+      videoElem.style.animation = null;
+      videoElem.offsetHeight;
+
+      // set css variables and start animation
+      videoElem.style.setProperty('--zoomVideoFrom', zoomVideoFrom);
+      videoElem.style.setProperty('--zoomVideoTo'  , zoomVideoTo);
+      videoElem.style.animation = "zoomOut 0.2s ease-in-out";
+
+      // video element shoud stay where the animation has been finished
       // videoElem.style.position = "absolute";
       videoElem.style.transform = `scale(${this.videoZoom})`;
+
+      // set global video zoom, so it can be referenced from playerCore.vue
+      this.setGlobalVideoZoom(this.videoZoom);
+    },
+
+    showPlayerHeaderAndControls() {
+      this.toggleControls(true);
+      this.toggleHeader(true);
+    },
+    hidePlayerHeaderAndControls() {
+      this.toggleControls(false);
+      this.toggleHeader(false);
+    },
+    setPlayerHeader() {
+      let header = document.getElementsByClassName("player-header")[0];
+      this.setPlayerHeaderHtmlElem(header);
     }
 
   },
 };
 </script>
+
+<style>
+@keyframes zoomIn {
+  from { transform: scale(calc(var(--zoomVideoFrom)));}
+  to  {  transform: scale(calc(var(--zoomVideoTo)));}
+}
+
+@keyframes zoomOut {
+  from { transform: scale(calc(var(--zoomVideoFrom)));}
+  to  {  transform: scale(calc(var(--zoomVideoTo)));}
+}
+
+.player-header {
+  /* force overlapping layers to pass through (ignore) click events */
+  pointer-events: none;
+  position: absolute;
+  z-index: 3;
+}
+.player-core {
+  /* position: absolute; */
+}
+</style>

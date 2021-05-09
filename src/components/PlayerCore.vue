@@ -5,11 +5,10 @@
       pa-0
       ma-0
       class="video-wrapper"
-      @mouseenter="showControls()"
-      @mouseleave="hideControls()"
       @drag="moveVideo($event)"
     >
       <video
+        v-show="getVideoPath"
         ref="videoPlayer"
         @click="togglePlay()"
         @mousedown="moveVideo($event)"
@@ -27,7 +26,11 @@
           width="80%"
           :no-click-animation="true"
         >
-          <div class="controls">
+          <div 
+          class="controls"
+          @mouseenter="mouseOverControls = true"
+          @mouseleave="mouseOverControls = false"
+          >
             <!-- slider -->
             <div id="timeSlider">
               <v-slider
@@ -169,11 +172,9 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
-  props: ["videoPath"],
 
   data() {
     return {
-      controlsShown: true,
       volume: 1,
       fullscreen: false,
       videoY: undefined,
@@ -181,7 +182,17 @@ export default {
       videoLeft: 50,
       videoTop: 50,
       nowDragging: false,
+      hideControlsTimeout: undefined,
     };
+  },
+
+  mounted(){
+    console.log('get video path from player core:', this.getVideoPath)
+    if(this.getVideoPath){
+      let source = document.createElement("source");
+      source.setAttribute("src", this.getVideoPath);
+      this.$refs.videoPlayer.appendChild(source);
+    }
   },
 
   computed: {
@@ -217,23 +228,36 @@ export default {
         return 28;
       }
     },
+
+    controlsShown: {
+      get() {
+        return this.getControlsShown;
+      },
+      set(bool) {
+        return this.setControlsShown(bool);
+      }
+    },
+    mouseOverControls: {
+      get() {
+        return this.getMouseOverControls;
+      },
+      set(bool) {
+        return this.setMouseOverControls(bool);
+      }
+    },
     ...mapGetters({
+      getVideoPath: "getVideoPath",
       video: "getVideo",
       videoDuration: "getVideoDuration",
       videoCurrentTime: "getVideoCurrentTime",
       videoPaused: "getVideoPaused",
       playbackRate: "getPlaybackRate",
+      getGlobalVideoZoom: "getGlobalVideoZoom",
+      getControlsShown: "getControlsShown",
+      getMouseOverControls: "getMouseOverControls"
     }),
   },
 
-  watch: {
-    videoPath(newVal) {
-      console.log("changing video source to: ", newVal);
-      let source = document.createElement("source");
-      source.setAttribute("src", newVal);
-      this.$refs.videoPlayer.appendChild(source);
-    },
-  },
 
   methods: {
     ...mapActions({
@@ -243,25 +267,20 @@ export default {
       setVideoCurrentTime: "setVideoCurrentTime",
       setVideoPaused: "setVideoPaused",
       setPlaybackRate: "setPlaybackRate",
+      toggleControls: "toggleControls",
+      setControlsShown: "setControlsShown",
+      setMouseOverControls: "setMouseOverControls",
     }),
     togglePlay() {
       if(this.nowDragging == false){
         this.togglePlayVideo();
       }
-      
-      // if (this.video.paused || this.video.ended) {
-      //   this.video.play();
-      //   this.setVideoPaused(false);
-      // } else {
-      //   this.video.pause();
-      //   this.setVideoPaused(true);
-      // }
     },
     showControls() {
-      this.controlsShown = true;
+      this.toggleControls(true);
     },
     hideControls() {
-      setTimeout(() => (this.controlsShown = false), 0);
+      this.toggleControls(false);
     },
     onLoadedMetadata() {
       this.setVideo(this.$refs.videoPlayer);
@@ -300,6 +319,7 @@ export default {
       }
     },
 
+    // move video and Draggin functions
     moveVideo(event){
       event.preventDefault();
       this.videoY = event.clientY;
@@ -317,8 +337,15 @@ export default {
       let movementX = this.videoX - event.clientX;
       let movementY = this.videoY - event.clientY;
 
-      this.videoTop += movementY * 0.1;
-      this.videoLeft += movementX * 0.1;
+      //the old simpler way of zooming in
+      // when zoom in small mouse has to move a lot because of this 0.1
+      // this.videoTop += movementY * 0.1;
+      // this.videoLeft += movementX * 0.1;
+
+      // the new way of zooming in
+      // much more responsive
+      this.videoTop += movementY * 0.45 / this.getGlobalVideoZoom ** 2;
+      this.videoLeft += movementX * 0.45 / this.getGlobalVideoZoom ** 2;
 
       this.videoY = event.clientY;
       this.videoX = event.clientX;
@@ -372,7 +399,7 @@ export default {
   padding-top: 5px;
   margin-bottom: 5px;
   width: 100%;
-  background-color: rgba(236, 245, 247, 0.74);
+  background-color: rgba(236, 245, 247, 0.85);
 }
 .lightText {
   color: #0e153a;
