@@ -9,14 +9,15 @@
       <div class="btn" @click="backToHomeScreen()">
         <v-icon>mdi-chevron-left</v-icon>
       </div>
-      <div class="video-name">{{ getVideoName }}</div>
+
+      <div class="video-name" v-if="getVideoPath">{{ getVideoName }}</div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
-  props: ["videoPath"],
 
   data() {
     return {
@@ -26,31 +27,30 @@ export default {
 
   computed: {
     getVideoName() {
-      let fileName = this.videoPath.split("/").pop();
+      let fileName = this.getVideoPath.split("/").pop();
       fileName = fileName.split(".")[0];
       fileName = fileName.replace(/%20/g, " ");
       return fileName;
     },
+
+    ...mapGetters({
+      getVideoPath: "getVideoPath",
+    })
   },
 
   methods: {
     backToHomeScreen() {
       console.log("go back");
+      this.$router.push('/');
     },
   },
 
-  // watch: {
-  //   videoPath(newVal) {
-  //     console.log("new value is:", newVal)
-  //     this.videoName = newVal;
-  //   }
-  // }
 };
 </script>
 
 <style>
 .overlay {
-  background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(0,0,0,.3) 50%, rgba(0,0,0,.8));
+  background: linear-gradient(to top, rgba(0, 0, 0, 0),rgba(0,0,0,.1), rgba(0,0,0,.3) 60%, rgba(0,0,0,.6));
   width: 100vw;
   /* force overlapping layers to pass through (ignore) click events */
   pointer-events: none;

@@ -7,6 +7,7 @@ import playerHeader from './modules/playerHeader'
 
 export default new Vuex.Store({
   state: {
+    videoPath: undefined,
     video: undefined,
     videoPaused: true,
     videoDuration: 0,
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     mouseOverControls: false,
   },
   getters: {
+    getVideoPath: (state) => state.videoPath,
     getVideo: (state) => state.video,
     getVideoPaused: (state) => state.videoPaused,
     getVideoDuration: (state) => state.videoDuration,
@@ -36,6 +38,9 @@ export default new Vuex.Store({
         state.video.pause()
         commit('setVideoPaused', true)
       }
+    },
+    setVideoPath({commit}, videoPath){
+      commit('setVideoPath', videoPath)
     },
     setVideo({ commit }, videoHtmlElement) {
       commit('setVideo', videoHtmlElement)
@@ -63,8 +68,8 @@ export default new Vuex.Store({
     },
 
     // hiding and showing controls functions
-    toggleControls({dispatch}, bool) {
-      if(bool) {
+    toggleControls({dispatch,state}, bool) {
+      if(bool && state.video) {
         dispatch('showControls')
       }
       else {
@@ -102,6 +107,7 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    setVideoPath: (state, videoPath) => state.videoPath = videoPath,
     setVideo: (state, videoHtmlElement) => state.video = videoHtmlElement,
     setVideoPaused: (state, bool) => state.videoPaused = bool,
     setVideoDuration: (state, videoDuration) => state.videoDuration = videoDuration,

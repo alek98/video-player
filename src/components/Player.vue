@@ -6,10 +6,10 @@
       style="position: relative"
     >
       <div class="player-header">
-        <PlayerHeader :videoPath="videoPath" />
+        <PlayerHeader />
       </div>
-      <div style="position: absolute">
-        <PlayerCore :videoPath="videoPath" />
+      <div class="player-core">
+        <PlayerCore />
       </div>
     </div>
   </div>
@@ -18,7 +18,6 @@
 <script>
 import { mapActions } from "vuex";
 import PlayerCore from "./PlayerCore";
-import { ipcRenderer } from "electron";
 import PlayerHeader from './PlayerHeader.vue';
 
 export default {
@@ -29,12 +28,11 @@ export default {
 
   data() {
     return {
-      videoPath: "file:///Users/alek/Downloads/BigBuckBunny%205.mp4",
+      // videoPath: "file:///Users/alek/Downloads/BigBuckBunny%205.mp4",
       videoZoom: 1,
     };
   },
   created() {
-    this.addRenderer();
     this.addKeyListeners();
   },
   mounted() {
@@ -48,6 +46,7 @@ export default {
 
   methods: {
     ...mapActions({
+      setVideoPath: "setVideoPath",
       togglePlayVideo: "togglePlayVideo",
       forward: "forward",
       backward: "backward",
@@ -56,16 +55,6 @@ export default {
       toggleHeader: "playerHeader/toggleHeader",
       setPlayerHeaderHtmlElem: "playerHeader/setPlayerHeaderHtmlElem",
     }),
-    addRenderer() {
-      ipcRenderer.on("video-path-channel", (event, videoPath) => {
-        console.log(
-          " %c video path: ",
-          "color:darkblue; background-color:yellow",
-          videoPath
-        );
-        this.videoPath = videoPath;
-      });
-    },
 
     addKeyListeners() {
       window.addEventListener("keydown", (event) => {
@@ -195,5 +184,8 @@ export default {
   pointer-events: none;
   position: absolute;
   z-index: 3;
+}
+.player-core {
+  /* position: absolute; */
 }
 </style>

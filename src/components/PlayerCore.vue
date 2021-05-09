@@ -8,6 +8,7 @@
       @drag="moveVideo($event)"
     >
       <video
+        v-show="getVideoPath"
         ref="videoPlayer"
         @click="togglePlay()"
         @mousedown="moveVideo($event)"
@@ -171,7 +172,6 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
-  props: ["videoPath"],
 
   data() {
     return {
@@ -184,6 +184,15 @@ export default {
       nowDragging: false,
       hideControlsTimeout: undefined,
     };
+  },
+
+  mounted(){
+    console.log('get video path from player core:', this.getVideoPath)
+    if(this.getVideoPath){
+      let source = document.createElement("source");
+      source.setAttribute("src", this.getVideoPath);
+      this.$refs.videoPlayer.appendChild(source);
+    }
   },
 
   computed: {
@@ -237,6 +246,7 @@ export default {
       }
     },
     ...mapGetters({
+      getVideoPath: "getVideoPath",
       video: "getVideo",
       videoDuration: "getVideoDuration",
       videoCurrentTime: "getVideoCurrentTime",
@@ -248,14 +258,6 @@ export default {
     }),
   },
 
-  watch: {
-    videoPath(newVal) {
-      console.log("changing video source to: ", newVal);
-      let source = document.createElement("source");
-      source.setAttribute("src", newVal);
-      this.$refs.videoPlayer.appendChild(source);
-    },
-  },
 
   methods: {
     ...mapActions({
