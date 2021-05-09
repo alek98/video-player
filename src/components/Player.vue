@@ -1,28 +1,42 @@
 <template>
   <div>
-    <PlayerCore :videoPath="videoPath" />
+    <div 
+      @mousemove="showPlayerHeaderAndControls();"
+      @mouseleave="hidePlayerHeaderAndControls()"
+      style="position: relative"
+    >
+      <div class="player-header">
+        <PlayerHeader />
+      </div>
+      <div class="player-core">
+        <PlayerCore />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
 import PlayerCore from "./PlayerCore";
-import { ipcRenderer } from "electron";
+import PlayerHeader from './PlayerHeader.vue';
 
 export default {
   components: {
     PlayerCore,
+    PlayerHeader,
   },
 
   data() {
     return {
-      videoPath: "asdf",
+      // videoPath: "file:///Users/alek/Downloads/BigBuckBunny%205.mp4",
       videoZoom: 1,
     };
   },
   created() {
-    this.addRenderer();
     this.addKeyListeners();
+  },
+  mounted() {
+    this.setPlayerHeader()
   },
   computed: {
     player() {
@@ -32,21 +46,15 @@ export default {
 
   methods: {
     ...mapActions({
+      setVideoPath: "setVideoPath",
       togglePlayVideo: "togglePlayVideo",
       forward: "forward",
       backward: "backward",
-      setGlobalVideoZoom: 'setGlobalVideoZoom'
+      setGlobalVideoZoom: 'setGlobalVideoZoom',
+      toggleControls: "toggleControls",
+      toggleHeader: "playerHeader/toggleHeader",
+      setPlayerHeaderHtmlElem: "playerHeader/setPlayerHeaderHtmlElem",
     }),
-    addRenderer() {
-      ipcRenderer.on("video-path-channel", (event, videoPath) => {
-        console.log(
-          " %c video path: ",
-          "color:darkblue; background-color:yellow",
-          videoPath
-        );
-        this.videoPath = videoPath;
-      });
-    },
 
     addKeyListeners() {
       window.addEventListener("keydown", (event) => {
@@ -141,6 +149,19 @@ export default {
 
       // set global video zoom, so it can be referenced from playerCore.vue
       this.setGlobalVideoZoom(this.videoZoom);
+    },
+
+    showPlayerHeaderAndControls() {
+      this.toggleControls(true);
+      this.toggleHeader(true);
+    },
+    hidePlayerHeaderAndControls() {
+      this.toggleControls(false);
+      this.toggleHeader(false);
+    },
+    setPlayerHeader() {
+      let header = document.getElementsByClassName("player-header")[0];
+      this.setPlayerHeaderHtmlElem(header);
     }
 
   },
@@ -156,5 +177,15 @@ export default {
 @keyframes zoomOut {
   from { transform: scale(calc(var(--zoomVideoFrom)));}
   to  {  transform: scale(calc(var(--zoomVideoTo)));}
+}
+
+.player-header {
+  /* force overlapping layers to pass through (ignore) click events */
+  pointer-events: none;
+  position: absolute;
+  z-index: 3;
+}
+.player-core {
+  /* position: absolute; */
 }
 </style>

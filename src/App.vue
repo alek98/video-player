@@ -1,116 +1,78 @@
 <template>
   <v-app>
     <v-main>
-      <div id="app" v-show="videoPathExists==false">
-        <h1>Video Player</h1>
-        <button id="chooseButton" @click="chooseVideo()"> Choose Video </button>       
+      <div id="app">
+        <router-view></router-view>
       </div>
-      <Player v-show="videoPathExists==true"/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import Player from "./components/Player.vue";
-import {ipcRenderer, remote} from 'electron'
-const {dialog} = remote
+import { ipcRenderer } from "electron";
+import { mapActions } from 'vuex';
 export default {
   name: "App",
 
-  components: {
-    Player,
-  },
-
-  data(){
-    return{
+  data() {
+    return {
       args: "arguments",
       videoPathExists: false,
-    } 
+    };
   },
-  created(){
-   ipcRenderer.on("video-path-channel", (event,videoPath) =>{
-     if(videoPath)
-       this.videoPathExists = true;
-   });
+
+  /**
+   * listen to channel  "video-path-channel". 
+   * VideoPath is selected and send over "video-path-channel" 
+   * from Home.vue component.
+   * if videoPath exists & is valid route to /player path.
+   * /player path is Player.vue component.
+   * set videoPath in vuex store.
+   * videoPath from vuex is used in PlayerCore & PlayerHeader components.
+   */
+  created() {
+    ipcRenderer.on("video-path-channel", (event, videoPath) => {
+      if (!videoPath || videoPath === "file://undefined") {
+        console.log("video not chosen");
+        this.videoPathExists = false;
+      } 
+      else {
+        this.videoPathExists = true;
+        this.setVideoPath(videoPath);
+        this.$router.push("/player");
+      }
+    });
   },
-  methods:{
-    chooseVideo(){
-      const result = dialog.showOpenDialogSync({
-        properties: ['openFile'], 
-        filters: [
-          { name: 'Movies', extensions: ['mkv', 'avi', 'mp4', 'ogg', 'webm'] },
-        ],
-        title: 'Choose Video File',   // title for Windows
-        message: 'Choose Video File', // title for Mac
-      });
-
-      let videoPath = result?.[0];
-
-      // appending 'file://' to videoPath is necessary because macos doesn't have 'file://'
-      // and we need that for file protocol to work
-      videoPath = 'file://' + videoPath;
-      ipcRenderer.send('video-path-channel', videoPath)
-    }
+  methods: {
+    ...mapActions({
+      setVideoPath: "setVideoPath",
+    })
   }
-}
-
-
+};
 </script>
 
 <style>
-body::-webkit-scrollbar{
+body::-webkit-scrollbar {
   display: none;
 }
 #app {
   margin: 0px !important;
   padding: 0px !important;
-  background-image: linear-gradient(to bottom right, rgb(23, 162, 194), rgb(167, 90, 206), rgb(209, 66, 75));
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(23, 162, 194),
+    rgb(167, 90, 206),
+    rgb(209, 66, 75)
+  );
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
   background-color: #0e153a;
 }
 @import url("https://fonts.googleapis.com/css?family=Poppins");
-h1 {
-  font-family: "Poppins";
-  color: #e2f3f5;
-  font-size: 60px;
-  font-weight: 100;
-  text-align: center;
-  margin: 0px;
-  padding-top: 70px;
-  padding-bottom: 60px;
 
-}
 /* remove orange outline */
 *:focus {
-    outline: none;
-}
-#chooseButton {
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  font-family: "Poppins";
-  color: #e2f3f5;
-  background-image: linear-gradient(to right, #3d5af1, #21a5bd);
-  border: 0px;
-  border-radius: 10px;
-  padding-inline: 15px;
-  padding-block: 5px;
-  font-size: 25px;
-  box-shadow: 1px 3px 10px 1px #f3f169;
-}
-#chooseButton:hover {
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  font-family: "Poppins";
-  color: #e2f3f5;
-  background-image: linear-gradient(to right, #3550da, #16a6c0);
-  border: 0px;
-  border-radius: 10px;
-  padding-inline: 15px;
-  padding-block: 5px;
-  font-size: 25px;
+  outline: none;
 }
 </style>
