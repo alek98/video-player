@@ -1,16 +1,17 @@
 <template>
-  <div>
-    <v-container
-      fluid
-      pa-0
-      ma-0
+  <div 
+  id="videoBackground" 
+  style="height: 100%"
+  @click="togglePlay()"
+  >
+    <div
       class="video-wrapper"
+      id="videoWrapper"
       @drag="moveVideo($event)"
     >
       <video
         v-show="getVideoPath"
         ref="videoPlayer"
-        @click="togglePlay()"
         @mousedown="moveVideo($event)"
         @loadedmetadata="onLoadedMetadata()"
         @timeupdate="onTimeUpdate()"
@@ -19,7 +20,7 @@
       <!-- video controls -->
       <template v-if="video">
         <v-bottom-sheet
-          attach=".video-wrapper"
+          attach="#videoBackground"
           v-model="controlsShown"
           hide-overlay
           persistent
@@ -165,7 +166,7 @@
           </div>
         </v-bottom-sheet>
       </template>
-    </v-container>
+    </div>
   </div>
 </template>
 
@@ -324,37 +325,50 @@ export default {
       event.preventDefault();
       this.videoY = event.clientY;
       this.videoX = event.clientX;
-
-      this.$refs.videoPlayer.onmousemove = this.startDragging;
-      this.$refs.videoPlayer.onmouseup = this.stopDragging;
-      this.$refs.videoPlayer.onmouseleave = this.stopDragging;
+      let videoWrapper = document.getElementById('videoWrapper')
+      videoWrapper.onmousemove = this.startDragging;
+      videoWrapper.onmouseup = this.stopDragging;
+      videoWrapper.onmouseleave = this.stopDragging;
     },
     startDragging(event){ 
       this.nowDragging = true;  
-      if(this.boundariesExceeded() === true) {
-        return;
-      }
-      let movementX = this.videoX - event.clientX;
-      let movementY = this.videoY - event.clientY;
+      // if(this.boundariesExceeded() === true) {
+      //   return;
+      // }
+        // let directionX = (videoX - event.clientX) > 0 ? 1 : -1;
+        // let directionY = (videoY - event.clientY) > 0 ? 1 : -1;
+        //$("#scroll").scrollLeft($("#scroll").scrollLeft() + 10 * directionX);
+        //$("#scroll").scrollTop($("#scroll").scrollTop() + 10 * directionY);
+        let videoWrapper = document.getElementById('videoWrapper')
+        videoWrapper.scrollLeft = videoWrapper.scrollLeft + (this.videoX - event.clientX)
+        videoWrapper.scrollTop = videoWrapper.scrollTop + (this.videoY - event.clientY)
+        this.videoX = event.clientX;
+        this.videoY = event.clientY;
+        let movementX = this.videoX - event.clientX;
+        let movementY = this.videoY - event.clientY;
+        this.$refs.videoPlayer.style.transform = `translate(${movementX}, ${movementY} ) scale(${this.getGlobalVideoZoom})`
 
-      //the old simpler way of zooming in
-      // when zoom in small mouse has to move a lot because of this 0.1
-      // this.videoTop += movementY * 0.1;
-      // this.videoLeft += movementX * 0.1;
 
-      // the new way of zooming in
-      // much more responsive
-      this.videoTop += movementY * 0.45 / this.getGlobalVideoZoom ** 2;
-      this.videoLeft += movementX * 0.45 / this.getGlobalVideoZoom ** 2;
 
-      this.videoY = event.clientY;
-      this.videoX = event.clientX;
+      // //the old simpler way of zooming in
+      // // when zoom in small mouse has to move a lot because of this 0.1
+      // // this.videoTop += movementY * 0.1;
+      // // this.videoLeft += movementX * 0.1;
+
+      // // the new way of zooming in
+      // // much more responsive
+      // this.videoTop += movementY * 0.45 / this.getGlobalVideoZoom ** 2;
+      // this.videoLeft += movementX * 0.45 / this.getGlobalVideoZoom ** 2;
+
+      // this.videoY = event.clientY;
+      // this.videoX = event.clientX;
       
-      this.$refs.videoPlayer.style.transformOrigin  = `${this.videoLeft}% ${this.videoTop}%`;
+      // this.$refs.videoPlayer.style.transformOrigin  = `${this.videoLeft}% ${this.videoTop}%`;
     },
     stopDragging(){
-      this.$refs.videoPlayer.onmousemove = null;
-      this.$refs.videoPlayer.onmouseup = null;
+      let videoWrapper = document.getElementById('videoWrapper')
+      videoWrapper.onmousemove = null;
+      videoWrapper.onmouseup = null;
       // onmouseup togglePlay() function will be triggered too
       // with timeout, I'm preventing togglePlay() if user was draggin the video
       setTimeout(() => {
@@ -387,11 +401,14 @@ export default {
 </script>
 
 <style>
-.video-wrapper {
-  background-color: rgb(37, 36, 36);
-  transform: translate(0px, 0px);
-  overflow: hidden;
-  height: 100vh;
+#videoWrapper {
+  /* background-color: rgb(197, 79, 79);*/
+  aspect-ratio: 16/9;
+  position: relative;
+
+  /* center video */
+  transform: translateY(-50%);
+  top: 50%;
 }
 .controls {
   border-radius: 8px;
@@ -411,7 +428,9 @@ export default {
 }
 video {
   width: 100%;
-  height: 100%;
+  background: rgb(30, 30, 133);
+  aspect-ratio: 16/9;
+  position: absolute;
 }
 
 /* only time slider css */

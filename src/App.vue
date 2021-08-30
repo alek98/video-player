@@ -58,16 +58,8 @@ body::-webkit-scrollbar {
 #app {
   margin: 0px !important;
   padding: 0px !important;
-  background-image: linear-gradient(
-    to bottom right,
-    rgb(23, 162, 194),
-    rgb(167, 90, 206),
-    rgb(209, 66, 75)
-  );
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-  background-color: #0e153a;
+  background-color: rgb(37, 36, 36);
+
 }
 @import url("https://fonts.googleapis.com/css?family=Poppins");
 

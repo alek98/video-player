@@ -3,7 +3,7 @@
     <div 
       @mousemove="showPlayerHeaderAndControls();"
       @mouseleave="hidePlayerHeaderAndControls()"
-      style="position: relative"
+      style="position: relative; height: 100vh"
     >
       <div class="player-header">
         <PlayerHeader />
@@ -186,6 +186,6 @@ export default {
   z-index: 3;
 }
 .player-core {
-  /* position: absolute; */
+  height: 100%;
 }
 </style>
