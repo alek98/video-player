@@ -324,20 +324,19 @@ export default {
       event.preventDefault();
       this.videoY = event.clientY;
       this.videoX = event.clientX;
-      let videoWrapper = document.getElementById("videoBackground");
-      videoWrapper.onmousemove = this.startDragging;
-      videoWrapper.onmouseup = this.stopDragging;
-      videoWrapper.onmouseleave = this.stopDragging;
+      let videoBackground = document.getElementById("videoBackground");
+      videoBackground.onmousemove = this.startDragging;
+      videoBackground.onmouseup = this.stopDragging;
+      videoBackground.onmouseleave = this.stopDragging;
     },
     startDragging(event){ 
       this.nowDragging = true;  
       // if(this.boundariesExceeded() === true) {
       //   return;
       // }
-      let videoWrapper = document.getElementById("videoBackground");
-      console.log(videoWrapper.style.left)
-      videoWrapper.scrollLeft = videoWrapper.scrollLeft + (this.videoX - event.clientX)
-      videoWrapper.scrollTop = videoWrapper.scrollTop + (this.videoY - event.clientY)
+      let videoBackground = document.getElementById("videoBackground");
+      videoBackground.scrollLeft = videoBackground.scrollLeft + (this.videoX - event.clientX)
+      videoBackground.scrollTop = videoBackground.scrollTop + (this.videoY - event.clientY)
 
       this.videoX = event.clientX
       this.videoY = event.clientY
@@ -389,7 +388,7 @@ export default {
   border: 5px solid seagreen;
   aspect-ratio: 16/9;
   position: relative;
-  width: 1000px;
+  /* width: 1000px; */
   /* center video */
   /* transform: translateY(-50%);
   top: 50%; */

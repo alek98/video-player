@@ -102,21 +102,22 @@ export default {
       this.videoZoom += 0.2;
       let zoomVideoTo = this.videoZoom;
 
-      // reference the <video> element
-      let videoElem = document.getElementsByTagName("img")[0];
+      // reference the videoWrapper element
+      let videoWrapper = document.getElementById('videoWrapper');
 
       //reset animation 
-      videoElem.style.animation = null;
-      videoElem.offsetHeight;
+      videoWrapper.style.animation = null;
+      videoWrapper.offsetHeight;
       
       // set css variables and start animation
-      videoElem.style.setProperty('--zoomVideoFrom', zoomVideoFrom);
-      videoElem.style.setProperty('--zoomVideoTo'  , zoomVideoTo);
-      videoElem.style.animation = "zoomIn 0.2s ease-in-out";
+      videoWrapper.style.setProperty('--zoomVideoFrom', `${zoomVideoFrom * 100}%`);
+      videoWrapper.style.setProperty('--zoomVideoTo'  , `${zoomVideoTo * 100}%`);
+      videoWrapper.style.animation = "zoomIn 0.2s ease-in-out";
 
       // video element shoud stay where the animation has been finished
-      // videoElem.style.position = "absolute";
-      videoElem.style.transform = `scale(${this.videoZoom})`;
+      // videoWrapper.style.position = "absolute";
+      // videoWrapper.style.transform = `scale(${this.videoZoom})`;
+      videoWrapper.style.width = `${this.videoZoom * 100}%`;
 
       // set global video zoom, so it can be referenced from playerCore.vue
       this.setGlobalVideoZoom(this.videoZoom);
@@ -131,21 +132,22 @@ export default {
       this.videoZoom -= 0.2;
       let zoomVideoTo = this.videoZoom;
 
-      // reference the <video> element
-      let videoElem = document.getElementsByTagName("img")[0];
+      // reference the videoWrapper element
+      let videoWrapper = document.getElementById('videoWrapper');
 
       //reset animation
-      videoElem.style.animation = null;
-      videoElem.offsetHeight;
+      videoWrapper.style.animation = null;
+      videoWrapper.offsetHeight;
 
       // set css variables and start animation
-      videoElem.style.setProperty('--zoomVideoFrom', zoomVideoFrom);
-      videoElem.style.setProperty('--zoomVideoTo'  , zoomVideoTo);
-      videoElem.style.animation = "zoomOut 0.2s ease-in-out";
+      videoWrapper.style.setProperty('--zoomVideoFrom', `${zoomVideoFrom * 100}%`);
+      videoWrapper.style.setProperty('--zoomVideoTo'  , `${zoomVideoTo * 100}%`);
+      videoWrapper.style.animation = "zoomOut 0.2s ease-in-out";
 
       // video element shoud stay where the animation has been finished
-      // videoElem.style.position = "absolute";
-      videoElem.style.transform = `scale(${this.videoZoom})`;
+      // videoWrapper.style.position = "absolute";
+      videoWrapper.style.width = `${this.videoZoom * 100}%`;
+      
 
       // set global video zoom, so it can be referenced from playerCore.vue
       this.setGlobalVideoZoom(this.videoZoom);
@@ -170,13 +172,13 @@ export default {
 
 <style>
 @keyframes zoomIn {
-  from { transform: scale(calc(var(--zoomVideoFrom)));}
-  to  {  transform: scale(calc(var(--zoomVideoTo)));}
+  from { width: calc(var(--zoomVideoFrom))}
+  to  {  width: calc(var(--zoomVideoTo));}
 }
 
 @keyframes zoomOut {
-  from { transform: scale(calc(var(--zoomVideoFrom)));}
-  to  {  transform: scale(calc(var(--zoomVideoTo)));}
+  from { width: calc(var(--zoomVideoFrom));}
+  to  {  width: calc(var(--zoomVideoTo));}
 }
 
 .player-header {
