@@ -103,7 +103,7 @@ export default {
       let zoomVideoTo = this.videoZoom;
 
       // reference the <video> element
-      let videoElem = document.getElementsByTagName("video")[0];
+      let videoElem = document.getElementsByTagName("img")[0];
 
       //reset animation 
       videoElem.style.animation = null;
@@ -132,7 +132,7 @@ export default {
       let zoomVideoTo = this.videoZoom;
 
       // reference the <video> element
-      let videoElem = document.getElementsByTagName("video")[0];
+      let videoElem = document.getElementsByTagName("img")[0];
 
       //reset animation
       videoElem.style.animation = null;

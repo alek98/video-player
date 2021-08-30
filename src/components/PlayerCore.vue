@@ -1,20 +1,18 @@
 <template>
   <div 
   id="videoBackground" 
-  style="height: 100%"
-  @click="togglePlay()"
   >
     <div
-      class="video-wrapper"
       id="videoWrapper"
-      @drag="moveVideo($event)"
+      @mousedown="moveVideo($event)"
     >
+      <img src="file:///Users/alek/Downloads/proba.png" style="width: 100%">
       <video
         v-show="getVideoPath"
         ref="videoPlayer"
-        @mousedown="moveVideo($event)"
         @loadedmetadata="onLoadedMetadata()"
         @timeupdate="onTimeUpdate()"
+        @click="togglePlay()"
       ></video>
 
       <!-- video controls -->
@@ -273,6 +271,7 @@ export default {
       setMouseOverControls: "setMouseOverControls",
     }),
     togglePlay() {
+      console.log('toggle')
       if(this.nowDragging == false){
         this.togglePlayVideo();
       }
@@ -325,7 +324,7 @@ export default {
       event.preventDefault();
       this.videoY = event.clientY;
       this.videoX = event.clientX;
-      let videoWrapper = document.getElementById('videoWrapper')
+      let videoWrapper = document.getElementById("videoBackground");
       videoWrapper.onmousemove = this.startDragging;
       videoWrapper.onmouseup = this.stopDragging;
       videoWrapper.onmouseleave = this.stopDragging;
@@ -335,38 +334,17 @@ export default {
       // if(this.boundariesExceeded() === true) {
       //   return;
       // }
-        // let directionX = (videoX - event.clientX) > 0 ? 1 : -1;
-        // let directionY = (videoY - event.clientY) > 0 ? 1 : -1;
-        //$("#scroll").scrollLeft($("#scroll").scrollLeft() + 10 * directionX);
-        //$("#scroll").scrollTop($("#scroll").scrollTop() + 10 * directionY);
-        let videoWrapper = document.getElementById('videoWrapper')
-        videoWrapper.scrollLeft = videoWrapper.scrollLeft + (this.videoX - event.clientX)
-        videoWrapper.scrollTop = videoWrapper.scrollTop + (this.videoY - event.clientY)
-        this.videoX = event.clientX;
-        this.videoY = event.clientY;
-        let movementX = this.videoX - event.clientX;
-        let movementY = this.videoY - event.clientY;
-        this.$refs.videoPlayer.style.transform = `translate(${movementX}, ${movementY} ) scale(${this.getGlobalVideoZoom})`
+      let videoWrapper = document.getElementById("videoBackground");
+      console.log(videoWrapper.style.left)
+      videoWrapper.scrollLeft = videoWrapper.scrollLeft + (this.videoX - event.clientX)
+      videoWrapper.scrollTop = videoWrapper.scrollTop + (this.videoY - event.clientY)
 
-
-
-      // //the old simpler way of zooming in
-      // // when zoom in small mouse has to move a lot because of this 0.1
-      // // this.videoTop += movementY * 0.1;
-      // // this.videoLeft += movementX * 0.1;
-
-      // // the new way of zooming in
-      // // much more responsive
-      // this.videoTop += movementY * 0.45 / this.getGlobalVideoZoom ** 2;
-      // this.videoLeft += movementX * 0.45 / this.getGlobalVideoZoom ** 2;
-
-      // this.videoY = event.clientY;
-      // this.videoX = event.clientX;
+      this.videoX = event.clientX
+      this.videoY = event.clientY
       
-      // this.$refs.videoPlayer.style.transformOrigin  = `${this.videoLeft}% ${this.videoTop}%`;
     },
     stopDragging(){
-      let videoWrapper = document.getElementById('videoWrapper')
+      let videoWrapper = document.getElementById('videoBackground')
       videoWrapper.onmousemove = null;
       videoWrapper.onmouseup = null;
       // onmouseup togglePlay() function will be triggered too
@@ -401,15 +379,22 @@ export default {
 </script>
 
 <style>
+#videoBackground {
+  height: 100%;
+  overflow: hidden;
+
+}
 #videoWrapper {
-  /* background-color: rgb(197, 79, 79);*/
+  background: linear-gradient(to right, rgb(0, 159, 255), rgb(236, 47, 75));
+  border: 5px solid seagreen;
   aspect-ratio: 16/9;
   position: relative;
-
+  width: 1000px;
   /* center video */
-  transform: translateY(-50%);
-  top: 50%;
+  /* transform: translateY(-50%);
+  top: 50%; */
 }
+
 .controls {
   border-radius: 8px;
   padding: 10px;
