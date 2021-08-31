@@ -1,165 +1,168 @@
 <template>
   <div id="videoBackground">
-    <div id="videoWrapper" @mousedown="moveVideo($event)">
-      <img src="file:///Users/alek/Downloads/proba.png" style="width: 100%">
-      <video
-        v-show="getVideoPath"
-        ref="videoPlayer"
-        @loadedmetadata="onLoadedMetadata()"
-        @timeupdate="onTimeUpdate()"
-        @click="togglePlay()"
-      ></video>
+    <div id="videoContainer">
+      <div id="videoWrapper" @mousedown="moveVideo($event)">
+        <!-- <img src="file:///Users/alek/Downloads/proba.png" style="width: 100%"> -->
+        <video
+          v-show="getVideoPath"
+          ref="videoPlayer"
+          @loadedmetadata="onLoadedMetadata()"
+          @timeupdate="onTimeUpdate()"
+          @click="togglePlay()"
+        ></video>
 
-      <!-- video controls -->
-      <template v-if="video">
-        <v-bottom-sheet
-          attach="#videoBackground"
-          v-model="controlsShown"
-          hide-overlay
-          persistent
-          width="80%"
-          :no-click-animation="true"
-        >
-          <div 
-          class="controls"
-          @mouseenter="mouseOverControls = true"
-          @mouseleave="mouseOverControls = false"
+        <!-- video controls -->
+        <template v-if="video">
+          <v-bottom-sheet
+            attach="#videoBackground"
+            v-model="controlsShown"
+            hide-overlay
+            persistent
+            width="80%"
+            :no-click-animation="true"
           >
-            <!-- slider -->
-            <div id="timeSlider">
-              <v-slider
-                min="0"
-                :max="videoDuration"
-                :value="videoCurrentTime"
-                @input="onSliderInput($event)"
-                dense
-                height="30"
-                hide-details="true"
-                thumb-label
-                step="1"
-                color="#3d5af1"
-                track-color="#29bfd9"
-              >
-                <template v-slot:thumb-label="{}">
-                  {{ getVideoCurrentTimeFormated }}
-                </template>
-              </v-slider>
-            </div>
-            <!-- actions and buttons -->
-            <div>
-              <v-container fluid pa-0 ma-0>
-                <v-row align="center">
-                  <v-col cols="1" class="pr-0 pl-0" align="center">
-                    <!-- play || payse button -->
-                    <v-btn small icon color="#0e153a" @click="togglePlay()">
-                      <v-icon medium v-show="videoPaused"> mdi-play </v-icon>
-                      <v-icon medium v-show="!videoPaused"> mdi-pause </v-icon>
-                    </v-btn>
-                  </v-col>
+            <div 
+            class="controls"
+            @mouseenter="mouseOverControls = true"
+            @mouseleave="mouseOverControls = false"
+            >
+              <!-- slider -->
+              <div id="timeSlider">
+                <v-slider
+                  min="0"
+                  :max="videoDuration"
+                  :value="videoCurrentTime"
+                  @input="onSliderInput($event)"
+                  dense
+                  height="30"
+                  hide-details="true"
+                  thumb-label
+                  step="1"
+                  color="#3d5af1"
+                  track-color="#29bfd9"
+                >
+                  <template v-slot:thumb-label="{}">
+                    {{ getVideoCurrentTimeFormated }}
+                  </template>
+                </v-slider>
+              </div>
+              <!-- actions and buttons -->
+              <div>
+                <v-container fluid pa-0 ma-0>
+                  <v-row align="center">
+                    <v-col cols="1" class="pr-0 pl-0" align="center">
+                      <!-- play || payse button -->
+                      <v-btn small icon color="#0e153a" @click="togglePlay()">
+                        <v-icon medium v-show="videoPaused"> mdi-play </v-icon>
+                        <v-icon medium v-show="!videoPaused"> mdi-pause </v-icon>
+                      </v-btn>
+                    </v-col>
 
-                  <v-col cols="1" class="pl-0 mr-1" align="left">
-                    <!-- time -->
-                    <div class="lightText" style="">
-                      {{ getVideoCurrentTimeFormated }} /
-                      {{ getVideoDurationFormated }}
-                    </div>
-                  </v-col>
+                    <v-col cols="1" class="pl-0 mr-1" align="left">
+                      <!-- time -->
+                      <div class="lightText" style="">
+                        {{ getVideoCurrentTimeFormated }} /
+                        {{ getVideoDurationFormated }}
+                      </div>
+                    </v-col>
 
-                  <v-col class="ml-4 pr-0">
-                    <!-- volume -->
-                    <div id="volumeSlider" class="sliderWidth">
-                      <v-slider
-                        :value="volume"
-                        max="1"
-                        min="0"
-                        step="0.1"
-                        dense
-                        hide-details="true"
-                        color="#2d6cdf"
-                        track-color="#2d6cdf"
-                        @input="onVolumeInput($event)"
+                    <v-col class="ml-4 pr-0">
+                      <!-- volume -->
+                      <div id="volumeSlider" class="sliderWidth">
+                        <v-slider
+                          :value="volume"
+                          max="1"
+                          min="0"
+                          step="0.1"
+                          dense
+                          hide-details="true"
+                          color="#2d6cdf"
+                          track-color="#2d6cdf"
+                          @input="onVolumeInput($event)"
+                        >
+                          <template v-slot:prepend>
+                            <v-icon color="#0e153a" v-show="volume >= 0.5">
+                              mdi-volume-high
+                            </v-icon>
+                            <v-icon
+                              color="#0e153a"
+                              v-show="volume > 0 && volume < 0.5"
+                            >
+                              mdi-volume-medium
+                            </v-icon>
+                            <v-icon color="#0e153a" v-show="volume == 0">
+                              mdi-volume-mute
+                            </v-icon>
+                          </template>
+                          <template v-slot:append>
+                            <div class="pt-1 lightText">{{ volume * 100 }}%</div>
+                          </template>
+                        </v-slider>
+                      </div>
+                    </v-col>
+
+                    <v-col align="right">
+                      <v-row align="center">
+                        <v-col align="right" class="pr-0 pl-0">
+                          <!-- playback rate -->
+                          <div id="playbackRateSlider" class="sliderWidth">
+                            <v-slider
+                              :value="playbackRate"
+                              max="2"
+                              min="0.5"
+                              step="0.05"
+                              dense
+                              hide-details="true"
+                              :color="playbackRateColor"
+                              track-color="#29bfd9"
+                              :thumb-color="playbackRateColor"
+                              :thumb-size="playbackRateThumbSize"
+                              @input="onPlaybackRateInput($event)"
+                            >
+                              <template v-slot:prepend>
+                                <!-- reset playback rate on click -->
+                                <v-btn
+                                  small
+                                  icon
+                                  @click="onPlaybackRateInput(1)"
+                                  color="#0e153a"
+                                >
+                                  <v-icon> mdi-play-speed </v-icon>
+                                </v-btn>
+                              </template>
+                            </v-slider>
+                          </div>
+                        </v-col>
+                        <v-col cols="1" align="left" class="pt-2">
+                          <div class="lightText">{{ playbackRate }}x</div>
+                        </v-col>
+                      </v-row>
+                    </v-col>
+
+                    <v-col cols="1" align="center">
+                      <v-btn
+                        small
+                        icon
+                        color="#0e153a"
+                        @click="toggleFullscreen()"
                       >
-                        <template v-slot:prepend>
-                          <v-icon color="#0e153a" v-show="volume >= 0.5">
-                            mdi-volume-high
-                          </v-icon>
-                          <v-icon
-                            color="#0e153a"
-                            v-show="volume > 0 && volume < 0.5"
-                          >
-                            mdi-volume-medium
-                          </v-icon>
-                          <v-icon color="#0e153a" v-show="volume == 0">
-                            mdi-volume-mute
-                          </v-icon>
-                        </template>
-                        <template v-slot:append>
-                          <div class="pt-1 lightText">{{ volume * 100 }}%</div>
-                        </template>
-                      </v-slider>
-                    </div>
-                  </v-col>
-
-                  <v-col align="right">
-                    <v-row align="center">
-                      <v-col align="right" class="pr-0 pl-0">
-                        <!-- playback rate -->
-                        <div id="playbackRateSlider" class="sliderWidth">
-                          <v-slider
-                            :value="playbackRate"
-                            max="2"
-                            min="0.5"
-                            step="0.05"
-                            dense
-                            hide-details="true"
-                            :color="playbackRateColor"
-                            track-color="#29bfd9"
-                            :thumb-color="playbackRateColor"
-                            :thumb-size="playbackRateThumbSize"
-                            @input="onPlaybackRateInput($event)"
-                          >
-                            <template v-slot:prepend>
-                              <!-- reset playback rate on click -->
-                              <v-btn
-                                small
-                                icon
-                                @click="onPlaybackRateInput(1)"
-                                color="#0e153a"
-                              >
-                                <v-icon> mdi-play-speed </v-icon>
-                              </v-btn>
-                            </template>
-                          </v-slider>
-                        </div>
-                      </v-col>
-                      <v-col cols="1" align="left" class="pt-2">
-                        <div class="lightText">{{ playbackRate }}x</div>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-
-                  <v-col cols="1" align="center">
-                    <v-btn
-                      small
-                      icon
-                      color="#0e153a"
-                      @click="toggleFullscreen()"
-                    >
-                      <v-icon medium v-show="!fullscreen">
-                        mdi-fullscreen
-                      </v-icon>
-                      <v-icon medium v-show="fullscreen">
-                        mdi-fullscreen-exit
-                      </v-icon>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </v-container>
+                        <v-icon medium v-show="!fullscreen">
+                          mdi-fullscreen
+                        </v-icon>
+                        <v-icon medium v-show="fullscreen">
+                          mdi-fullscreen-exit
+                        </v-icon>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </div>
             </div>
-          </div>
-        </v-bottom-sheet>
-      </template>
+          </v-bottom-sheet>
+        </template>
+      </div>
     </div>
+
   </div>
 </template>
 
@@ -325,6 +328,7 @@ export default {
       videoWrapper.onmouseleave = this.stopDragging;
     },
     startDragging(event){ 
+      console.log('dragging')
       this.nowDragging = true;  
 
       // calculate how much to move video along x and y axis in pixels
@@ -379,16 +383,22 @@ export default {
   overflow: hidden;
 
 }
+#videoContainer {
+  /* center video */
+  position: relative;
+  transform: translateY(-50%);
+  top: 50%;
+}
 #videoWrapper {
-  background: linear-gradient(to right, rgb(0, 159, 255), rgb(236, 47, 75));
-  border: 5px solid seagreen;
+  /* background: linear-gradient(to right, rgb(0, 159, 255), rgb(236, 47, 75)); */
+  /* border: 5px solid seagreen; */
   aspect-ratio: 16/9;
   position: relative;
   transform-origin: left top;
-  /* width: 1000px; */
   /* center video */
-  /* transform: translateY(-50%);
-  top: 50%; */
+  max-height: 100vh;
+  margin: 0 auto;
+
 }
 
 .controls {
