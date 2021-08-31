@@ -1,11 +1,6 @@
 <template>
-  <div 
-  id="videoBackground" 
-  >
-    <div
-      id="videoWrapper"
-      @mousedown="moveVideo($event)"
-    >
+  <div id="videoBackground">
+    <div id="videoWrapper" @mousedown="moveVideo($event)">
       <img src="file:///Users/alek/Downloads/proba.png" style="width: 100%">
       <video
         v-show="getVideoPath"
@@ -176,10 +171,10 @@ export default {
     return {
       volume: 1,
       fullscreen: false,
-      videoY: undefined,
-      videoX: undefined,
-      videoLeft: 50,
-      videoTop: 50,
+      previousY: undefined,
+      previousX: undefined,
+      videoLeft: 0,
+      videoTop: 0,
       nowDragging: false,
       hideControlsTimeout: undefined,
     };
@@ -322,28 +317,50 @@ export default {
     // move video and Draggin functions
     moveVideo(event){
       event.preventDefault();
-      this.videoY = event.clientY;
-      this.videoX = event.clientX;
-      let videoBackground = document.getElementById("videoBackground");
-      videoBackground.onmousemove = this.startDragging;
-      videoBackground.onmouseup = this.stopDragging;
-      videoBackground.onmouseleave = this.stopDragging;
+      this.previousY = event.clientY;
+      this.previousX = event.clientX;
+      let videoWrapper = document.getElementById("videoWrapper");
+      videoWrapper.onmousemove = this.startDragging;
+      videoWrapper.onmouseup = this.stopDragging;
+      videoWrapper.onmouseleave = this.stopDragging;
     },
     startDragging(event){ 
       this.nowDragging = true;  
-      // if(this.boundariesExceeded() === true) {
-      //   return;
-      // }
-      let videoBackground = document.getElementById("videoBackground");
-      videoBackground.scrollLeft = videoBackground.scrollLeft + (this.videoX - event.clientX)
-      videoBackground.scrollTop = videoBackground.scrollTop + (this.videoY - event.clientY)
 
-      this.videoX = event.clientX
-      this.videoY = event.clientY
+      // calculate how much to move video along x and y axis in pixels
+      let newVideoLeft = this.videoLeft - (this.previousX  - event.clientX) / (1 - this.getGlobalVideoZoom)
+      let newVideoTop = this.videoTop -  (this.previousY  - event.clientY) / (1 - this.getGlobalVideoZoom)
+      
+      let videoWrapperHeight = document.getElementById('videoWrapper').offsetHeight
+      let videoWrapperWidth  = document.getElementById('videoWrapper').offsetWidth
+      
+      // move video along x-axis & check if boundaries are not exceeded
+      // set left boundary
+      if (newVideoLeft <= 0) this.videoLeft = 0
+      // set right boundary
+      else if (newVideoLeft >= videoWrapperWidth) this.videoLeft = videoWrapperWidth
+      // set normal movement
+      else this.videoLeft = newVideoLeft
+      
+      // check if boundaries are exceeded along y-axis
+      // set top boundary
+      if (newVideoTop <= 0) this.videoTop = 0
+      // set bottom boundary
+      else if (newVideoTop >= videoWrapperHeight) this.videoTop = videoWrapperHeight
+      // set normal movement
+      else this.videoTop = newVideoTop
+    
+      // set new coordinates and move video
+      let videoWrapper = document.getElementById("videoWrapper");
+      videoWrapper.style.transformOrigin = `${this.videoLeft}px ${this.videoTop}px`
+      
+      // update mouse coordinates
+      this.previousX = event.clientX
+      this.previousY = event.clientY
       
     },
     stopDragging(){
-      let videoWrapper = document.getElementById('videoBackground')
+      let videoWrapper = document.getElementById('videoWrapper')
       videoWrapper.onmousemove = null;
       videoWrapper.onmouseup = null;
       // onmouseup togglePlay() function will be triggered too
@@ -352,27 +369,6 @@ export default {
         this.nowDragging = false;
       }, 10);
     },
-
-    boundariesExceeded(){
-      if(this.videoLeft > 100 ){
-        this.videoLeft = 100;
-        return true;
-      }
-      else if(this.videoLeft < 0){
-        this.videoLeft = 0;
-        return true;
-      }
-      else if(this.videoTop > 100) {
-        this.videoTop = 100;
-        return true;
-      }
-      else if(this.videoTop < 0) {
-        this.videoTop = 0;
-        return true;
-      }
-
-    }
-
   },
 };
 </script>
@@ -388,6 +384,7 @@ export default {
   border: 5px solid seagreen;
   aspect-ratio: 16/9;
   position: relative;
+  transform-origin: left top;
   /* width: 1000px; */
   /* center video */
   /* transform: translateY(-50%);
