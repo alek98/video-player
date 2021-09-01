@@ -31,6 +31,9 @@ export default new Vuex.Store({
 
   actions: {
     togglePlayVideo({ commit, state }) {
+      if(!state.video) {
+        return;
+      }
       if (state.video.paused || state.video.ended) {
         state.video.play()
         commit('setVideoPaused', false)

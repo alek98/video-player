@@ -28,6 +28,10 @@ export default {
   computed: {
     getVideoName() {
       let fileName = this.getVideoPath.split("/").pop();
+      // if on windows split with '/' must be replaced with '\'
+      if(fileName.includes('\\')) {
+        fileName = this.getVideoPath.split("\\").pop();
+      }
       fileName = fileName.split(".")[0];
       fileName = fileName.replace(/%20/g, " ");
       return fileName;
