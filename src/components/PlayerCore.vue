@@ -268,7 +268,6 @@ export default {
       setMouseOverControls: "setMouseOverControls",
     }),
     togglePlay() {
-      console.log('toggle')
       if(this.nowDragging == false){
         this.togglePlayVideo();
       }
@@ -319,16 +318,21 @@ export default {
     // move video and Draggin functions
     moveVideo(event){
       event.preventDefault();
+
       this.previousY = event.clientY;
       this.previousX = event.clientX;
+
       let videoWrapper = document.getElementById("videoWrapper");
       videoWrapper.onmousemove = this.startDragging;
       videoWrapper.onmouseup = this.stopDragging;
       videoWrapper.onmouseleave = this.stopDragging;
     },
     startDragging(event){ 
-      console.log('dragging')
       this.nowDragging = true;  
+
+      // if no zoom is set, zoom is == prevent dragging
+      // otherwise dragging won't work cause videoLeft & videoTop will be NaN
+      if(this.getGlobalVideoZoom == 1) return;
 
       // calculate how much to move video along x and y axis in pixels
       let newVideoLeft = this.videoLeft - (this.previousX  - event.clientX) / (1 - this.getGlobalVideoZoom)
@@ -336,7 +340,7 @@ export default {
       
       let videoWrapperHeight = document.getElementById('videoWrapper').offsetHeight
       let videoWrapperWidth  = document.getElementById('videoWrapper').offsetWidth
-      
+
       // move video along x-axis & check if boundaries are not exceeded
       // set left boundary
       if (newVideoLeft <= 0) this.videoLeft = 0
