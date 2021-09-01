@@ -175,8 +175,8 @@ export default {
       fullscreen: false,
       previousY: undefined,
       previousX: undefined,
-      videoLeft: 0,
-      videoTop: 0,
+      videoLeft: undefined,
+      videoTop: undefined,
       nowDragging: false,
       hideControlsTimeout: undefined,
     };
@@ -332,14 +332,19 @@ export default {
 
       // if no zoom is set, zoom is == prevent dragging
       // otherwise dragging won't work cause videoLeft & videoTop will be NaN
-      if(this.getGlobalVideoZoom == 1) return;
+      if (this.getGlobalVideoZoom == 1) return;
+
+      let videoWrapperHeight = document.getElementById('videoWrapper').offsetHeight
+      let videoWrapperWidth  = document.getElementById('videoWrapper').offsetWidth
+      
+      if (this.videoLeft === undefined) this.videoLeft = videoWrapperWidth / 2
+      if (this.videoTop  === undefined) this.videoTop  = videoWrapperHeight / 2
 
       // calculate how much to move video along x and y axis in pixels
       let newVideoLeft = this.videoLeft - (this.previousX  - event.clientX) / (1 - this.getGlobalVideoZoom)
       let newVideoTop = this.videoTop -  (this.previousY  - event.clientY) / (1 - this.getGlobalVideoZoom)
       
-      let videoWrapperHeight = document.getElementById('videoWrapper').offsetHeight
-      let videoWrapperWidth  = document.getElementById('videoWrapper').offsetWidth
+
 
       // move video along x-axis & check if boundaries are not exceeded
       // set left boundary
@@ -384,7 +389,6 @@ export default {
 #videoBackground {
   height: 100%;
   overflow: hidden;
-
 }
 #videoContainer {
   /* center video */
@@ -397,11 +401,10 @@ export default {
   /* border: 5px solid seagreen; */
   aspect-ratio: 16/9;
   position: relative;
-  transform-origin: left top;
+  transform-origin: center center;
   /* center video */
   max-height: 100vh;
   margin: 0 auto;
-
 }
 
 .controls {
