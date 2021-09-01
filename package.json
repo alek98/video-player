@@ -9,7 +9,7 @@
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "electron:serve-with-file": "vue-cli-service electron:serve C:\\Users\\aleka\\Documents\\Projects\\video-player\\Big_Buck_Bunny_1080_10s_1MB.mp4",
-    "electron:serve-with-file-mac": "vue-cli-service electron:serve file:///Users/alek/Downloads/BigBuckBunny%205.mp4",
+    "electron:serve-with-file-mac": "vue-cli-service electron:serve file:///Users/alek/Documents/GitHub/video-player/videos/test%20video%201.mp4",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
