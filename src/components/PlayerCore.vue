@@ -2,7 +2,6 @@
   <div id="videoBackground">
     <div id="videoContainer">
       <div id="videoWrapper" @mousedown="moveVideo($event)">
-        <!-- <img src="file:///Users/alek/Downloads/proba.png" style="width: 100%"> -->
         <video
           v-show="getVideoPath"
           ref="videoPlayer"
