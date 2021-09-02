@@ -8,6 +8,7 @@
           @loadedmetadata="onLoadedMetadata()"
           @timeupdate="onTimeUpdate()"
           @click="togglePlay()"
+          preload="auto"
         ></video>
 
         <!-- video controls -->
@@ -288,13 +289,9 @@ export default {
     onSliderInput(event) {
       // event is an integer in seconds
       // videoCurrentTime is an integer in seconds
-      // those two should be equal
-      // if those two are not equal, that means that user is sliding the slider bar
-      // both event and videoCurrentTime must be rounded to int
-      if (event != this.videoCurrentTime) {
         this.video.currentTime = event;
-        return;
-      }
+        this.setVideoCurrentTime(Math.floor(this.video.currentTime));
+
     },
     onVolumeInput(event) {
       // volume is in range [0,1]

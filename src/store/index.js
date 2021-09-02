@@ -62,9 +62,11 @@ export default new Vuex.Store({
     },
     forward({ state }) {
       state.video.currentTime += 5 * state.playbackRate;
+      state.videoCurrentTime = state.video.currentTime
     },
     backward({ state }) {
       state.video.currentTime -= 5 * state.playbackRate;
+      state.videoCurrentTime = state.video.currentTime
     },
     setGlobalVideoZoom({commit}, videoZoom) {
       commit('setGlobalVideoZoom', videoZoom)
