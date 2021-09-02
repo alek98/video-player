@@ -80,7 +80,6 @@ export default {
   color: white;
 }
 .btn {
-  cursor: pointer;
   border-radius: 50%;
   /* do Not ignore click event on the back button */
   pointer-events: auto;

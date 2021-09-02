@@ -36,8 +36,8 @@ export default {
 h1 {
   font-family: "Poppins";
   color: #e2f3f5;
-  font-size: 60px;
-  font-weight: 100;
+  font-size: 75px;
+  font-weight: 500;
   text-align: center;
   margin: 0px;
   padding-top: 70px;
@@ -52,11 +52,11 @@ h1 {
   color: #e2f3f5;
   background-image: linear-gradient(to right, #3d5af1, #21a5bd);
   border: 0px;
-  border-radius: 10px;
-  padding-inline: 15px;
-  padding-block: 5px;
-  font-size: 25px;
-  box-shadow: 1px 3px 10px 1px #f3f169;
+  border-radius: 22px;
+  padding-inline: 45px;
+  padding-block: 15px;
+  font-size: 30px;
+  /* box-shadow: 1px 3px 10px 1px #f3f169; */
 }
 #chooseButton:hover {
   margin-left: auto;
@@ -64,11 +64,6 @@ h1 {
   display: block;
   font-family: "Poppins";
   color: #e2f3f5;
-  background-image: linear-gradient(to right, #3550da, #16a6c0);
-  border: 0px;
-  border-radius: 10px;
-  padding-inline: 15px;
-  padding-block: 5px;
-  font-size: 25px;
+  background-image: linear-gradient(to right, #314bce, #149bb3);
 }
 </style>

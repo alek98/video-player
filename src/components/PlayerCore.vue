@@ -422,7 +422,7 @@ export default {
 }
 video {
   width: 100%;
-  background: rgb(30, 30, 133);
+  /* background: rgb(30, 30, 133); */
   aspect-ratio: 16/9;
   position: absolute;
 }

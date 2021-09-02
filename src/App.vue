@@ -58,7 +58,7 @@ body::-webkit-scrollbar {
 #app {
   margin: 0px !important;
   padding: 0px !important;
-  background-color: rgb(37, 36, 36);
+  background-color: #252424;
 
 }
 @import url("https://fonts.googleapis.com/css?family=Poppins");
@@ -66,5 +66,9 @@ body::-webkit-scrollbar {
 /* remove orange outline */
 *:focus {
   outline: none;
+}
+
+btn{
+  cursor: pointer;
 }
 </style>

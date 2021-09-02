@@ -20,7 +20,7 @@ async function createWindow() {
     height: 600,
     minHeight: 350,
     minWidth: 600,
-    backgroundColor: '#2e2c29',
+    backgroundColor: '#252424',
     show: false,
     webPreferences: {
       nodeIntegration: true,
