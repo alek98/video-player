@@ -81,22 +81,21 @@
                           @input="onVolumeInput($event)"
                         >
                           <template v-slot:prepend>
-                            <v-icon color="#0e153a" v-show="volume >= 0.5">
-                              mdi-volume-high
-                            </v-icon>
-                            <v-icon
-                              color="#0e153a"
-                              v-show="volume > 0 && volume < 0.5"
-                            >
-                              mdi-volume-medium
-                            </v-icon>
-                            <v-icon color="#0e153a" v-show="volume == 0">
-                              mdi-volume-mute
-                            </v-icon>
+                            <v-btn small icon @click="toggleVolume()">
+                              <v-icon color="#0e153a" v-show="volume == 0">
+                                mdi-volume-mute
+                              </v-icon>
+                              <v-icon color="#0e153a" v-show="volume >= 0.5">
+                                mdi-volume-high
+                              </v-icon>
+                              <v-icon color="#0e153a" v-show="volume > 0 && volume < 0.5">
+                                mdi-volume-medium
+                              </v-icon>
+                            </v-btn>
                           </template>
-                          <template v-slot:append>
+                          <!-- <template v-slot:append>
                             <div class="pt-1 lightText">{{ volume * 100 }}%</div>
-                          </template>
+                          </template> -->
                         </v-slider>
                       </div>
                     </v-col>
@@ -173,6 +172,7 @@ export default {
   data() {
     return {
       volume: 1,
+      previousVolume: 0,
       fullscreen: false,
       previousY: undefined,
       previousX: undefined,
@@ -272,6 +272,18 @@ export default {
       if(this.nowDragging == false){
         this.togglePlayVideo();
       }
+    },
+    toggleVolume() {
+      
+      if (this.volume != 0) {
+        this.previousVolume = this.volume
+        this.volume = 0
+      }
+      else {
+        this.volume = this.previousVolume
+        this.previousVolume = 0;
+      }
+      this.video.volume = this.volume
     },
     showControls() {
       this.toggleControls(true);
